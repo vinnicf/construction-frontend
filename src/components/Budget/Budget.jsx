@@ -1,12 +1,62 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Stage from './Stage';
+import SubItem from './SubItem';
+import { fetchCompositions } from '../../api';
+
+
+
 
 const Budget = () => {
+
     const [name, setName] = useState('');
-    const [stages, setStages] = useState([]);
+
+    const [items, setItems] = useState([
+        { id: '1', type: 'stage', name: 'Initial Stage' },
+        { id: '2', type: 'stage', name: 'Second Stage' },
+    ]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const composition1 = await fetchCompositions('89225');
+            const composition2 = await fetchCompositions('95282');
+
+            const newItems = [
+                ...items,
+                { id: '1.1', type: 'subitem', ...composition1 },
+                { id: '1.2', type: 'subitem', ...composition2 },
+            ];
+
+            setItems(newItems);
+        };
+
+        fetchData();
+    }, []);
+
+
+    const [showSubItemForm, setShowSubItemForm] = useState(false);
 
     const addStage = () => {
-        setStages([...stages, { id: stages.length + 1, subItems: [] }]);
+        const newStage = { id: (items.length + 1).toString(), type: 'stage', name: 'New Stage' };
+        setItems([...items, newStage]);
+    };
+
+
+
+    const handleAddSubItem = () => {
+        // Capture data from form (For now, using dummy data)
+        const newSubItem = {
+            id: `${items.length + 1}.1`,
+            type: 'subitem',
+            codigo: 'NewCode',
+            name: 'NewDescription',
+            unit: 'Unit',
+            quantity: 0,
+            unitCost: 0,
+        };
+
+        setItems([...items, newSubItem]);
+        // Hide the form
+        setShowSubItemForm(false);
     };
 
     return (
@@ -17,10 +67,52 @@ const Budget = () => {
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Budget Name"
             />
-            {stages.map(stage => <Stage key={stage.id} stage={stage} />)}
+            <button className="btn btn-primary mb-2 mr-2" onClick={addStage}>Add Stage</button>
+            <button className="btn btn-secondary mb-2" onClick={() => setShowSubItemForm(true)}>Add Subitem</button>
+
+            {/* Master Table */}
+            <table className="table table-bordered">
+                <thead className="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Code</th>
+                        <th>Description</th>
+                        <th>Unit</th>
+                        <th>Quantity</th>
+                        <th>Unit Cost</th>
+                        <th>Total Cost</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {items.map(item => {
+                        if (item.type === 'stage') {
+                            return <Stage key={item.id} stage={item} />;
+                        }
+                        //Separate SubItem component
+                        return <SubItem key={item.id} subItem={item} />
+                    })}
+
+
+                    {showSubItemForm && (
+                        <tr>
+                            <td></td>
+                            <td><input className="form-control" placeholder="Code" /></td>
+                            <td><input className="form-control" placeholder="Description" /></td>
+                            <td><input className="form-control" placeholder="Unit" /></td>
+                            <td><input className="form-control" placeholder="Quantity" type="number" /></td>
+                            <td><input className="form-control" placeholder="Unit Cost" type="number" /></td>
+                            <td></td>
+                            <td><button className="btn btn-success" onClick={handleAddSubItem}>Submit</button></td>
+                        </tr>
+                    )}
+
+
+                </tbody>
+            </table>
             <button className="btn btn-primary mt-2" onClick={addStage}>Add Stage</button>
         </div>
     );
-}
+};
 
 export default Budget;

@@ -1,8 +1,13 @@
+import axios from 'axios';
 
-const API_URL = "http://127.0.0.1:8000/api"; // Update with your Django API URL
+const API_URL = "http://127.0.0.1:8000/api";
 
-export const fetchCompositions = async () => {
-    const response = await fetch(`${API_URL}/compositions/`);
-    const data = await response.json();
-    return data;
+export const fetchCompositions = async (codigo) => {
+    try {
+        const response = await axios.get(`${API_URL}/compositions/${codigo}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching compositions:", error);
+        return [];
+    }
 }
