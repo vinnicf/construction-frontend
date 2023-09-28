@@ -11,8 +11,8 @@ const Budget = () => {
     const [name, setName] = useState('');
 
     const [items, setItems] = useState([
-        { id: '1', type: 'stage', name: 'Initial Stage' },
-        { id: '2', type: 'stage', name: 'Second Stage' },
+        { refId: '1', type: 'stage', name: 'Initial Stage' },
+        { refId: '2', type: 'stage', name: 'Second Stage' },
     ]);
 
     useEffect(() => {
@@ -22,8 +22,8 @@ const Budget = () => {
 
             const newItems = [
                 ...items,
-                { id: '1.1', type: 'subitem', ...composition1 },
-                { id: '1.2', type: 'subitem', ...composition2 },
+                { refId: '1.1', type: 'subitem', ...composition1 },
+                { refId: '1.2', type: 'subitem', ...composition2 },
             ];
 
             setItems(newItems);
@@ -36,7 +36,7 @@ const Budget = () => {
     const [showSubItemForm, setShowSubItemForm] = useState(false);
 
     const addStage = () => {
-        const newStage = { id: (items.length + 1).toString(), type: 'stage', name: 'New Stage' };
+        const newStage = { refId: (items.length + 1).toString(), type: 'stage', name: 'New Stage' };
         setItems([...items, newStage]);
     };
 
@@ -45,7 +45,7 @@ const Budget = () => {
     const handleAddSubItem = () => {
         // Capture data from form (For now, using dummy data)
         const newSubItem = {
-            id: `${items.length + 1}.1`,
+            refId: `${items.length + 1}.1`,
             type: 'subitem',
             codigo: 'NewCode',
             name: 'NewDescription',
@@ -58,6 +58,20 @@ const Budget = () => {
         // Hide the form
         setShowSubItemForm(false);
     };
+
+    const sortedItems = items.sort((a, b) => {
+        const partsA = a.refId.split('.').map(Number);
+        const partsB = b.refId.split('.').map(Number);
+        const len = Math.min(partsA.length, partsB.length);
+
+        for (let i = 0; i < len; i++) {
+            if (partsA[i] !== partsB[i]) {
+                return partsA[i] - partsB[i];
+            }
+        }
+        return partsA.length - partsB.length;
+    });
+
 
     return (
         <div className="container mt-5">
@@ -85,12 +99,12 @@ const Budget = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {items.map(item => {
+                    {sortedItems.map(item => {
                         if (item.type === 'stage') {
-                            return <Stage key={item.id} stage={item} />;
+                            return <Stage key={item.refId} stage={item} />;
                         }
                         //Separate SubItem component
-                        return <SubItem key={item.id} subItem={item} />
+                        return <SubItem key={item.refId} subItem={item} />
                     })}
 
 

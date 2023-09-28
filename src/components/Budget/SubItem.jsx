@@ -26,7 +26,7 @@ const SubItem = ({ subItem, onSubItemChange }) => {
 
     return (
         <tr>
-            <td>{subItem.id}</td>
+            <td>{subItem.refId}</td>
 
 
             {isEditing ? (

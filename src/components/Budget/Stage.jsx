@@ -2,7 +2,7 @@
 const Stage = ({ stage }) => {
     return (
         <tr>
-            <td>{stage.id}</td>
+            <td>{stage.refId}</td>
             <td colSpan="7">{stage.name}</td>
         </tr>
     );
