@@ -6,12 +6,17 @@ const SubItem = ({ subItem, onSubItemChange }) => {
     const [name, setDescription] = useState(subItem.name || '');
     const [unit, setUnit] = useState(subItem.unit || '');
     const [quantity, setQuantity] = useState(subItem.quantity || 0);
-    const [unitCost, setUnitCost] = useState(subItem.unitCost || 0);
+    const [unitCost, setUnitCost] = useState(subItem.comp_cost || 0);
+    const [refId, setRefId] = useState(subItem.refId || '');
+
+
+
 
 
     const handleUpdate = () => {
         const updatedSubItem = {
             ...subItem,
+            refId,
             codigo,
             name,
             unit,
@@ -19,29 +24,39 @@ const SubItem = ({ subItem, onSubItemChange }) => {
             unitCost,
             totalCost: unitCost * quantity
         };
-
+        console.log("SubItem update:", updatedSubItem);
         onSubItemChange(updatedSubItem);
         setIsEditing(false); // revert to display mode after update
     };
 
+
+    const openModal = () => {
+
+        console.log('Opening the modal...');
+    }
     return (
         <tr>
-            <td>{subItem.refId}</td>
+            {isEditing ? (
+                <td><input className="form-control" value={refId} onChange={(e) => setRefId(e.target.value)} /></td>
+            ) : (
+                <td onClick={() => setIsEditing(true)}>{refId}</td>
+            )}
 
 
             {isEditing ? (
-                <td><input className="form-control" value={codigo} onChange={(e) => setCodigo(e.target.value)} /></td>
+                <td>{codigo} </td>
             ) : (
-                <td onClick={() => setIsEditing(true)}>{codigo}</td> // Clicking on the text will make it editable
+                <td onClick={openModal}>{codigo}</td>
             )}
 
             {isEditing ? (
                 <td><input className="form-control" value={name} onChange={(e) => setDescription(e.target.value)} /></td>
-            ) : (<td onClick={() => setIsEditing(true)}>{name}</td> // Clicking on the text will make it editable
+            ) : (
+                <td onClick={() => setIsEditing(true)}>{name}</td>
             )}
 
             <td>{unit}</td>
-            <td><input className="form-control" type="number" value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} /></td>
+            <td onClick={() => setIsEditing(true)}><input className="form-control" type="number" value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} /></td>
             <td>{unitCost}</td>
             <td>{unitCost * quantity}</td>
             {isEditing ? (

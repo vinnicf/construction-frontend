@@ -5,7 +5,7 @@ function CompositionList() {
     const [compositions, setCompositions] = useState([]);
 
     useEffect(() => {
-        axios.get('http://127.0.0.1:8000/api/compositions/')
+        axios.get('')
             .then(response => {
                 setCompositions(response.data);
             });
