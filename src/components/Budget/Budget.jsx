@@ -4,8 +4,9 @@ import SubItem from './SubItem';
 import SearchCompositionModal from './SearchCompositionModal';
 import { v4 as uuidv4 } from 'uuid';
 import { fetchCompositions } from '../../api';
+import '../../styles/budget.css'
 
-
+const BDI = 0.1;
 
 
 const Budget = () => {
@@ -40,7 +41,6 @@ const Budget = () => {
     }, []);
 
 
-    const [showSubItemForm, setShowSubItemForm] = useState(false);
 
     const addStage = () => {
         setShowStageForm(true);
@@ -121,7 +121,36 @@ const Budget = () => {
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Budget Name"
             />
-            <button className="btn btn-primary mb-2 mr-2" onClick={addStage}>Add Stage</button>
+
+            <div className="topcontainer">
+                <div className="buttons-container">
+                    <button className="btn btn-primary mb-2 mr-2" onClick={addStage}>Adicionar Etapa</button>
+                    <button className="btn btn-danger mb-2 mr-2" onClick={() => setShowModal(true)}>Adicionar Composição</button>
+                </div>
+                <div className="dados-container my-2">
+                    <table className="table table-bordered" style={{ margin: '10px' }}>
+                        <tbody>
+                            <tr>
+                                <td className="bg-light" style={{ width: '50%' }}>Bancos</td>
+                                <td>SINAPI 09/2023</td>
+                            </tr>
+                            <tr>
+                                <td className="bg-light">BDI</td>
+                                <td>10%</td>
+                            </tr>
+                            <tr>
+                                <td className="bg-light">Encargos Sociais</td>
+                                <td><p>Não desonerada</p>
+                                    <p>Horista</p>
+                                    <p>Mensalista</p>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
 
 
             {/* Master Table */}
@@ -134,6 +163,7 @@ const Budget = () => {
                         <th>Unidade</th>
                         <th>Quantidade</th>
                         <th>Custo Unitário</th>
+                        <th>Cost with BDI</th>
                         <th>Total Cost</th>
                         <th>Actions</th>
                     </tr>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+const BDI = 0.1;
 const SubItem = ({ subItem, onSubItemChange }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [codigo, setCodigo] = useState(subItem.codigo || '');
@@ -14,6 +15,7 @@ const SubItem = ({ subItem, onSubItemChange }) => {
 
 
     const handleUpdate = () => {
+        const costWithBDI = parseFloat((unitCost * (1 + BDI)).toFixed(2));
         const updatedSubItem = {
             ...subItem,
             refId,
@@ -22,6 +24,7 @@ const SubItem = ({ subItem, onSubItemChange }) => {
             unit,
             quantity,
             unitCost,
+            costWithBDI,
             totalCost: unitCost * quantity
         };
         console.log("SubItem update:", updatedSubItem);
@@ -58,7 +61,8 @@ const SubItem = ({ subItem, onSubItemChange }) => {
             <td>{unit}</td>
             <td onClick={() => setIsEditing(true)}><input className="form-control" type="number" value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} /></td>
             <td>{unitCost}</td>
-            <td>{unitCost * quantity}</td>
+            <td>{parseFloat((unitCost * (1 + BDI)).toFixed(2))}</td>
+            <td>{parseFloat((unitCost * quantity * (1 + BDI)).toFixed(2))}</td>
             {isEditing ? (
                 <button className="btn btn-sm btn-info" onClick={handleUpdate}>Update</button>
             ) : (
