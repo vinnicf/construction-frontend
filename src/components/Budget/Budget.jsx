@@ -12,7 +12,7 @@ const Budget = () => {
 
     const [name, setName] = useState('');
     const [showModal, setShowModal] = useState(false);
-
+    const [showStageForm, setShowStageForm] = useState(false);
     const [items, setItems] = useState([
         { idd: uuidv4(), refId: '1', type: 'stage', name: 'Initial Stage' },
         { idd: uuidv4(), refId: '2', type: 'stage', name: 'Second Stage' },
@@ -31,7 +31,6 @@ const Budget = () => {
                 { idd: uuidv4(), refId: '1.1', type: 'subitem', ...composition2[0] },
             ];
             setItems(sortItems(newItems));
-            console.log(composition2[0])
 
 
         };
@@ -44,17 +43,22 @@ const Budget = () => {
     const [showSubItemForm, setShowSubItemForm] = useState(false);
 
     const addStage = () => {
+        setShowStageForm(true);
+    };
+
+    const handleAddStage = (name, refId) => {
         const newStage = {
             idd: uuidv4(),
-            refId: (items.length + 1).toString(),
+            refId,
             type: 'stage',
-            name: 'New Stage'
+            name
         };
-        setItems(sortItems([...items, newStage])); // <-- Use the sorting function
+        setItems(sortItems([...items, newStage]));
+        setShowStageForm(false);
     };
 
     const sortItems = (itemsToSort) => {
-        console.log('Before sorting:', itemsToSort.map(item => item.refId));
+
 
         // Create a shallow copy for immutable sorting
         const itemsToSortCopy = [...itemsToSort];
@@ -76,28 +80,12 @@ const Budget = () => {
             // If no differences were found so far, sort by depth (length of refId parts)
             return partsA.length - partsB.length;
         });
-        console.log('After sorting:', sortedItems.map(item => item.refId));
+
 
         return sortedItems;
     };
 
-    const handleAddSubItem = () => {
-        // Capture data from form (For now, using dummy data)
-        const newSubItem = {
-            idd: uuidv4(),
-            refId: `1.3`,
-            type: 'subitem',
-            codigo: 'NewCode',
-            name: 'NewDescription',
-            unit: 'Unit',
-            quantity: 0,
-            unitCost: 0,
-        };
 
-        setItems(sortItems([...items, newSubItem]));
-        // Hide the form
-        setShowSubItemForm(false);
-    };
 
     const handleAddComposition = (composition) => {
         const newSubItem = {
@@ -110,7 +98,7 @@ const Budget = () => {
     }
 
     const handleSubItemChange = (updatedSubItem) => {
-        console.log("Updating sub item", updatedSubItem);
+
         setItems(prevItems => {
             // Update the item first
             const updatedItems = prevItems.map(item =>
@@ -134,7 +122,7 @@ const Budget = () => {
                 placeholder="Budget Name"
             />
             <button className="btn btn-primary mb-2 mr-2" onClick={addStage}>Add Stage</button>
-            <button className="btn btn-secondary mb-2" onClick={() => setShowSubItemForm(true)}>Add Subitem</button>
+
 
             {/* Master Table */}
             <table className="table table-bordered">
@@ -160,19 +148,31 @@ const Budget = () => {
                     })}
 
 
-                    {showSubItemForm && (
-                        <tr>
-                            <td></td>
-                            <td><input className="form-control" placeholder="Code" /></td>
-                            <td><input className="form-control" placeholder="Description" /></td>
-                            <td><input className="form-control" placeholder="Unit" /></td>
-                            <td><input className="form-control" placeholder="Quantity" type="number" /></td>
-                            <td><input className="form-control" placeholder="Unit Cost" type="number" /></td>
-                            <td></td>
-                            <td><button className="btn btn-success" onClick={handleAddSubItem}>Submit</button></td>
-                        </tr>
-                    )}
 
+
+                    {
+                        showStageForm && (
+                            <tr>
+                                <td>
+                                    <input
+                                        className="form-control"
+                                        placeholder="Enter refId"
+                                        onChange={(e) => setTempRefId(e.target.value)}
+                                    />
+                                </td>
+                                <td>
+                                    <input
+                                        className="form-control"
+                                        placeholder="Enter Stage Name"
+                                        onChange={(e) => setTempStageName(e.target.value)}
+                                    />
+                                </td>
+                                <td>
+                                    <button onClick={() => handleAddStage(tempStageName, tempRefId)}>Add</button>
+                                </td>
+                            </tr>
+                        )
+                    }
 
                 </tbody>
             </table>
