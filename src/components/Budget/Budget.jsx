@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Stage from './Stage';
 import SubItem from './SubItem';
+import Totals from './Totals';
 import SearchCompositionModal from './SearchCompositionModal';
 import { v4 as uuidv4 } from 'uuid';
 import { fetchCompositions } from '../../api';
@@ -21,15 +22,15 @@ const Budget = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const composition1 = await fetchCompositions({ codigo: '104692' });
+            const composition1 = await fetchCompositions({ codigo: '89869' });
             const composition2 = await fetchCompositions({ codigo: '95282' });
 
 
             const newItems = [
                 ...items,
-                { idd: uuidv4(), refId: '4', type: 'subitem', ...composition1[0] },
-                { idd: uuidv4(), refId: '1.2', type: 'subitem', ...composition2[0] },
-                { idd: uuidv4(), refId: '1.1', type: 'subitem', ...composition2[0] },
+                { idd: uuidv4(), refId: '4', type: 'subitem', quantity: 1.5, ...composition1[0] },
+                { idd: uuidv4(), refId: '1.2', type: 'subitem', quantity: 1.5, ...composition2[0] },
+                { idd: uuidv4(), refId: '1.1', type: 'subitem', quantity: 1.5, ...composition2[0] },
             ];
             setItems(sortItems(newItems));
 
@@ -59,7 +60,6 @@ const Budget = () => {
 
     const sortItems = (itemsToSort) => {
 
-
         // Create a shallow copy for immutable sorting
         const itemsToSortCopy = [...itemsToSort];
 
@@ -68,7 +68,6 @@ const Budget = () => {
             const partsA = a.refId.split('.').map(Number);
             const partsB = b.refId.split('.').map(Number);
 
-            console.log(`Comparing: ${a.refId} with ${b.refId}`);
 
             // Iterate over the parts to find the first difference
             for (let i = 0; i < Math.min(partsA.length, partsB.length); i++) {
@@ -86,12 +85,31 @@ const Budget = () => {
     };
 
 
+    const totalWithoutBDI = items.reduce((sum, item) => {
+        if (item.type === 'subitem') {
+            console.log(item.unitCost, item.quantity);
+            return sum + (item.unitCost * item.quantity);
+        }
+        return sum;
+    }, 0);
+
+    const totalBDI = items.reduce((sum, item) => {
+        if (item.type === 'subitem') {
+            console.log(item.unitCost, BDI, item.quantity);
+            return sum + (item.unitCost * BDI * item.quantity);
+        }
+        return sum;
+    }, 0);
+
+    const grandTotal = totalWithoutBDI + totalBDI;
+
 
     const handleAddComposition = (composition) => {
         const newSubItem = {
             id: uuidv4(),
             refId: `1.${items.length + 1}`,
             type: 'subitem',
+            quantity: 1,
             ...composition
         };
         setItems(sortItems([...items, newSubItem]));
@@ -178,8 +196,6 @@ const Budget = () => {
                     })}
 
 
-
-
                     {
                         showStageForm && (
                             <tr>
@@ -205,6 +221,9 @@ const Budget = () => {
                     }
 
                 </tbody>
+                <Totals items={items} BDI={BDI} />
+
+
             </table>
             <button className="btn btn-primary mt-2" onClick={addStage}>Add Stage</button>
             <button className="btn btn-secondary mb-2" onClick={() => setShowModal(true)}>Adicionar Composição</button>

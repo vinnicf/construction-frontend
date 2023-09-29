@@ -13,7 +13,13 @@ export const fetchCompositions = async (params) => {
             throw new Error("Invalid search params provided");
         }
         const response = await axios.get(endpoint);
-        return response.data;
+
+        const processedData = response.data.map(item => ({
+            ...item,
+            unitCost: parseFloat(item.comp_cost)  // Convert comp_cost to a number
+        }));
+
+        return processedData;
     } catch (error) {
         console.error("Error fetching compositions:", error);
         return [];
