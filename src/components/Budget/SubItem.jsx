@@ -61,13 +61,23 @@ const SubItem = ({ subItem, onSubItemChange }) => {
             <td>{unit}</td>
             <td onClick={() => setIsEditing(true)}><input className="form-control" type="number" value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} /></td>
             <td>{unitCost}</td>
-            <td>{parseFloat((unitCost * (1 + BDI)).toFixed(2))}</td>
-            <td>{parseFloat((unitCost * quantity * (1 + BDI)).toFixed(2))}</td>
-            {isEditing ? (
-                <button className="btn btn-sm btn-info" onClick={handleUpdate}>Update</button>
-            ) : (
-                <button>Edit</button>
-            )}
+            <td> {/* Cost with BDI column */}
+                {isEditing ?
+                    <button className="btn btn-primary" onClick={() => {
+                        // handle update logic here
+                        setIsEditing(false);
+                    }}>Update</button> :
+                    parseFloat((unitCost * (1 + BDI)).toFixed(2))
+                }
+            </td>
+
+            <td>
+                {isEditing ?
+                    <button className="btn btn-secondary" onClick={() => setIsEditing(false)}>Cancel</button> :
+                    parseFloat((unitCost * quantity * (1 + BDI)).toFixed(2))
+                }
+            </td>
+
         </tr>
     );
 };

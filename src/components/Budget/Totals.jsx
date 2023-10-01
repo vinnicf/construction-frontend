@@ -9,7 +9,7 @@ function Totals({ items, BDI }) {
         const computedTotalWithoutBDI = items.reduce((sum, item) => {
             if (item.type === 'subitem') {
                 if (typeof item.unitCost !== 'number' || typeof item.quantity !== 'number') {
-                    console.log("Problematic item without BDI:", item);
+
                 }
                 return sum + (item.unitCost * item.quantity);
             }
@@ -31,15 +31,15 @@ function Totals({ items, BDI }) {
     return (
         <tfoot>
             <tr>
-                <td colSpan="5">Total without BDI</td>
+                <td colSpan="5">Total sem BDI</td>
                 <td colSpan="2">{totalWithoutBDI.toFixed(2)}</td>
             </tr>
             <tr>
-                <td colSpan="5">Total of BDI</td>
+                <td colSpan="5">Total do BDI</td>
                 <td colSpan="2">{totalBDI.toFixed(2)}</td>
             </tr>
             <tr>
-                <td colSpan="5">Grand Total</td>
+                <td colSpan="5">Total</td>
                 <td colSpan="2">{grandTotal.toFixed(2)}</td>
             </tr>
         </tfoot>

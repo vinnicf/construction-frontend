@@ -3,7 +3,10 @@ const Stage = ({ stage }) => {
     return (
         <tr>
             <td>{stage.refId}</td>
-            <td colSpan="7">{stage.name}</td>
+            <td></td> {/* Código */}
+            <td colSpan="5">{stage.name}</td>
+            <td>{stage.totalCost?.toFixed(2)}</td>
+
         </tr>
     );
 };

@@ -6,6 +6,7 @@ import SearchCompositionModal from './SearchCompositionModal';
 import { v4 as uuidv4 } from 'uuid';
 import { fetchCompositions } from '../../api';
 import '../../styles/budget.css'
+import processData from './InitialData';
 
 const BDI = 0.1;
 
@@ -15,25 +16,13 @@ const Budget = () => {
     const [name, setName] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [showStageForm, setShowStageForm] = useState(false);
-    const [items, setItems] = useState([
-        { idd: uuidv4(), refId: '1', type: 'stage', name: 'Initial Stage' },
-        { idd: uuidv4(), refId: '2', type: 'stage', name: 'Second Stage' },
-    ]);
+    const [items, setItems] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
-            const composition1 = await fetchCompositions({ codigo: '89869' });
-            const composition2 = await fetchCompositions({ codigo: '95282' });
-
-
-            const newItems = [
-                ...items,
-                { idd: uuidv4(), refId: '4', type: 'subitem', quantity: 1.5, ...composition1[0] },
-                { idd: uuidv4(), refId: '1.2', type: 'subitem', quantity: 1.5, ...composition2[0] },
-                { idd: uuidv4(), refId: '1.1', type: 'subitem', quantity: 1.5, ...composition2[0] },
-            ];
-            setItems(sortItems(newItems));
-
+            const initialItems = await processData();
+            const updatedItems = calculateAllStages(initialItems);
+            setItems(sortItems(updatedItems));
 
         };
 
@@ -47,16 +36,6 @@ const Budget = () => {
         setShowStageForm(true);
     };
 
-    const handleAddStage = (name, refId) => {
-        const newStage = {
-            idd: uuidv4(),
-            refId,
-            type: 'stage',
-            name
-        };
-        setItems(sortItems([...items, newStage]));
-        setShowStageForm(false);
-    };
 
     const sortItems = (itemsToSort) => {
 
@@ -84,50 +63,91 @@ const Budget = () => {
         return sortedItems;
     };
 
+    // Helper function to get children of a given refId
+    const getChildren = (refId, items) => {
+        return items.filter(item => item.refId.startsWith(refId + ".") && item.refId.split(".").length === refId.split(".").length + 1);
+    }
 
-    const totalWithoutBDI = items.reduce((sum, item) => {
-        if (item.type === 'subitem') {
-            console.log(item.unitCost, item.quantity);
-            return sum + (item.unitCost * item.quantity);
+    // Helper function to calculate the total for a given refId (stage or subitem)
+    const calculateTotalForRefId = (refId, items) => {
+        let total = 0;
+
+        const directChildren = getChildren(refId, items);
+        for (let child of directChildren) {
+            if (child.type === "subitem") {
+                total += (child.costWithBDI || child.unitCost) * child.quantity;  // or use the calculated cost with BDI
+            } else if (child.type === "stage") {
+                total += calculateTotalForRefId(child.refId, items);
+            }
         }
-        return sum;
-    }, 0);
 
-    const totalBDI = items.reduce((sum, item) => {
-        if (item.type === 'subitem') {
-            console.log(item.unitCost, BDI, item.quantity);
-            return sum + (item.unitCost * BDI * item.quantity);
+        return total;
+    }
+
+    // Calculate totals for all stages and update their total costs
+    const calculateAllStages = (items) => {
+        for (let item of items) {
+            if (item.type === "stage") {
+                item.totalCost = calculateTotalForRefId(item.refId, items);
+
+                console.log(`Total for stage ${item.name} (RefId: ${item.refId}): ${item.totalCost}`);
+            }
         }
-        return sum;
-    }, 0);
 
-    const grandTotal = totalWithoutBDI + totalBDI;
+        return [...items];  // return a new array to ensure re-render
+    }
 
+
+    const handleItemChange = (changedItem, action) => {
+        setItems(prevItems => {
+            let updatedItems;
+
+            if (action === 'update') {
+                updatedItems = prevItems.map(item => item.idd === changedItem.idd ? changedItem : item);
+            } else if (action === 'add') {
+                updatedItems = [...prevItems, changedItem];
+            } else {
+                return prevItems;
+            }
+
+            // Calculate totals for all stages and return
+            return calculateAllStages(updatedItems);
+        });
+    }
+
+    const handleAddStage = (name, refId) => {
+        const newStage = {
+            idd: uuidv4(),
+            refId,
+            type: 'stage',
+            name
+        };
+
+        // 2. Use handleItemChange for adding stage
+        handleItemChange(newStage, 'add');
+        setShowStageForm(false);
+    };
 
     const handleAddComposition = (composition) => {
         const newSubItem = {
-            id: uuidv4(),
+            idd: uuidv4(),
             refId: `1.${items.length + 1}`,
             type: 'subitem',
             quantity: 1,
             ...composition
         };
-        setItems(sortItems([...items, newSubItem]));
+
+        // Use handleItemChange for adding a composition/subitem
+        handleItemChange(newSubItem, 'add');
     }
+
+
 
     const handleSubItemChange = (updatedSubItem) => {
 
-        setItems(prevItems => {
-            // Update the item first
-            const updatedItems = prevItems.map(item =>
-                item.idd === updatedSubItem.idd ? updatedSubItem : item
-            );
-
-            // Now, sort the updatedItems
-            return sortItems(updatedItems);
-
-        });
+        handleItemChange(updatedSubItem, 'update');
     };
+
 
 
 
@@ -172,18 +192,18 @@ const Budget = () => {
 
 
             {/* Master Table */}
-            <table className="table table-bordered">
+            <table className="table table-bordered table-hover">
                 <thead className="table-light">
                     <tr>
-                        <th>#</th>
+                        <th>Item</th>
                         <th>Código</th>
                         <th>Descrição</th>
                         <th>Unidade</th>
-                        <th>Quantidade</th>
-                        <th>Custo Unitário</th>
-                        <th>Cost with BDI</th>
-                        <th>Total Cost</th>
-                        <th>Actions</th>
+                        <th>QTD</th>
+                        <th>Custo Unit</th>
+                        <th>Custo com BDI</th>
+                        <th>Total</th>
+
                     </tr>
                 </thead>
                 <tbody>
