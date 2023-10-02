@@ -12,3 +12,8 @@
     height: auto;
     max-height: 60px;
 }
+
+
+.stage-name {
+    font-weight: 600;
+}
