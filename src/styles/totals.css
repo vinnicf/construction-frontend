@@ -1,0 +1,45 @@
+.totals-maindiv {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    padding: 16px;
+    max-width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    margin-left: auto;
+}
+
+.totals-nobdi,
+.total-bdi,
+.grand-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+}
+
+.grand-total {
+    margin-top: 16px;
+    border-top: 1px solid #dcdcdc;
+    padding-top: 16px;
+    font-weight: 700;
+    /* makes the font a bit bolder */
+}
+
+.grand-total div:last-child {
+    font-size: 24px;
+    /* makes the grand total number bigger */
+}
+
+/* Optional: To provide some hover feedback */
+.totals-nobdi:hover,
+.total-bdi:hover,
+.grand-total:hover {
+    background-color: #e8e8e8;
+}
+
+/* Optional: Space out the titles a bit for better readability */
+div>div:first-child {
+    margin-right: 8px;
+}

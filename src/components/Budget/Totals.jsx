@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import '../../styles/totals.css'
 
 function Totals({ items, BDI }) {
     const [totalWithoutBDI, setTotalWithoutBDI] = useState(0);
@@ -29,20 +30,28 @@ function Totals({ items, BDI }) {
     }, [items, BDI]);
 
     return (
-        <tfoot>
-            <tr>
-                <td colSpan="5">Total sem BDI</td>
-                <td colSpan="2">{totalWithoutBDI.toFixed(2)}</td>
-            </tr>
-            <tr>
-                <td colSpan="5">Total do BDI</td>
-                <td colSpan="2">{totalBDI.toFixed(2)}</td>
-            </tr>
-            <tr>
-                <td colSpan="5">Total</td>
-                <td colSpan="2">{grandTotal.toFixed(2)}</td>
-            </tr>
-        </tfoot>
+        <div className="totals-container">
+            <div className="totals-maindiv">
+
+                <div className="totals-nobdi">
+                    <div>Total sem BDI</div>
+                    <div>R$ {totalWithoutBDI.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                </div>
+
+
+                <div className="total-bdi">
+                    <div>Total do BDI</div>
+                    <div>R$ {totalBDI.toLocaleString(`pt-BR`, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                </div>
+
+
+                <div className="grand-total">
+                    <div>Total</div>
+                    <div>R$ {grandTotal.toLocaleString(`pt-BR`, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                </div>
+
+            </div>
+        </div>
     );
 }
 

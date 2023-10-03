@@ -4,7 +4,6 @@ import SubItem from './SubItem';
 import Totals from './Totals';
 import SearchCompositionModal from './SearchCompositionModal';
 import { v4 as uuidv4 } from 'uuid';
-import { fetchCompositions } from '../../api';
 import '../../styles/budget.css'
 import processData from './InitialData';
 
@@ -14,6 +13,7 @@ const BDI = 0.1;
 const Budget = () => {
 
     const [name, setName] = useState('');
+    const [isEditingTitle, setIsEditingTitle] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [showStageForm, setShowStageForm] = useState(false);
     const [items, setItems] = useState([]);
@@ -153,12 +153,22 @@ const Budget = () => {
 
     return (
         <div className="container mt-5">
-            <input
-                className="form-control mb-3"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Budget Name"
-            />
+
+            {
+                isEditingTitle ? (
+                    <input
+                        className="form-control mb-3"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        onBlur={() => setIsEditingTitle(false)}  // Exit edit mode when the input loses focus
+                        autoFocus   // Automatically focus the input when it's rendered
+                    />
+                ) : (
+                    <div className="title mb-3" onClick={() => setIsEditingTitle(true)}>
+                        {name || "Clique para adicionar um nome ao orçamento"}
+                    </div>
+                )
+            }
 
             <div className="topcontainer">
                 <div className="buttons-container">
@@ -241,12 +251,12 @@ const Budget = () => {
                     }
 
                 </tbody>
-                <Totals items={items} BDI={BDI} />
+
 
 
             </table>
-            <button className="btn btn-primary mt-2" onClick={addStage}>Add Stage</button>
-            <button className="btn btn-secondary mb-2" onClick={() => setShowModal(true)}>Adicionar Composição</button>
+            <Totals items={items} BDI={BDI} />
+
 
             <SearchCompositionModal
                 isOpen={showModal}

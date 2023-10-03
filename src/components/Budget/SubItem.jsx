@@ -59,7 +59,12 @@ const SubItem = ({ subItem, onSubItemChange }) => {
             )}
 
             <td>{unit}</td>
-            <td onClick={() => setIsEditing(true)}><input className="form-control" type="number" value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} /></td>
+            {isEditing ? (
+                <td><input className="form-control" type="number" value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} /></td>
+            ) : (
+                <td onClick={() => setIsEditing(true)}>{quantity}</td>
+            )}
+
             <td>{unitCost}</td>
             <td> {/* Cost with BDI column */}
                 {isEditing ?
@@ -71,10 +76,10 @@ const SubItem = ({ subItem, onSubItemChange }) => {
                 }
             </td>
 
-            <td>
+            <td className='total-display'>
                 {isEditing ?
                     <button className="btn btn-secondary" onClick={() => setIsEditing(false)}>Cancel</button> :
-                    parseFloat((unitCost * quantity * (1 + BDI)).toFixed(2))
+                    parseFloat((unitCost * quantity * (1 + BDI)).toFixed(2)).toLocaleString(`pt-BR`, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
                 }
             </td>
 

@@ -17,3 +17,19 @@
 .stage-name {
     font-weight: 600;
 }
+
+.total-display {
+    text-align: right;
+}
+
+
+.title {
+    font-size: 1.5em;
+    cursor: pointer;
+    border-bottom: 2px dashed transparent; // Add a transparent border to keep the layout consistent
+    transition: border-bottom 0.3s; // Smooth transition for hover effect
+}
+
+.title:hover {
+    border-bottom: 2px dashed #000; // Show a dashed underline on hover
+}
