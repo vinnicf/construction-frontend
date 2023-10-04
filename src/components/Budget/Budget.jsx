@@ -255,6 +255,7 @@ const Budget = () => {
 
 
             </table>
+
             <Totals items={items} BDI={BDI} />
 
 

@@ -65,14 +65,14 @@ const SubItem = ({ subItem, onSubItemChange }) => {
                 <td onClick={() => setIsEditing(true)}>{quantity}</td>
             )}
 
-            <td>{unitCost}</td>
+            <td>{parseFloat(unitCost).toLocaleString(`pt-BR`, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
             <td> {/* Cost with BDI column */}
                 {isEditing ?
                     <button className="btn btn-primary" onClick={() => {
                         // handle update logic here
                         setIsEditing(false);
                     }}>Update</button> :
-                    parseFloat((unitCost * (1 + BDI)).toFixed(2))
+                    parseFloat((unitCost * (1 + BDI)).toFixed(2)).toLocaleString(`pt-BR`, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
                 }
             </td>
 
