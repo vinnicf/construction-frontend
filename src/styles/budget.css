@@ -62,8 +62,6 @@
 .sticky-header th {
     position: sticky;
     top: 0;
-    background-color: #fff;
-    /* or your desired color */
+    background-color: #ebebeb;
     z-index: 10;
-    /* optional, ensures header is above other elements */
 }

@@ -24,13 +24,12 @@ const Stage = ({ stage, handleOpenCompositionModal }) => {
                         <ButtonDeck
                             stageRefId={stage.refId}
                             onOpenCompositionModal={handleOpenCompositionModal}
-
                         />
 
                     </div>
                 </td>
                 <td>{stage.refId}</td>
-                <td></td> {/* Código */}
+                <td></td>
                 <td colSpan="5" className="stage-name">{stage.name}</td>
                 <td className='total-display'>{
                     stage.totalCost?.toLocaleString(`pt-BR`, { minimumFractionDigits: 2, maximumFractionDigits: 2 })

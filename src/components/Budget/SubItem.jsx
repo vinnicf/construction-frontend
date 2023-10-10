@@ -14,7 +14,6 @@ const SubItem = ({ subItem, onSubItemChange, BDI }) => {
 
     const handleUpdate = () => {
 
-
         const calculatedCostWithBDI = parseFloat((parseFloat(unitCost) * (1 + parseFloat(BDI))).toFixed(2));
         setCostWithBDI(calculatedCostWithBDI);
         const updatedSubItem = {
@@ -33,19 +32,20 @@ const SubItem = ({ subItem, onSubItemChange, BDI }) => {
         setIsEditing(false); // revert to display mode after update
     };
 
+
     useEffect(() => {
-        // Note: Make sure to validate BDI and unitCost before performing calculations.
+
         if (BDI !== null && unitCost !== null) {
             const initialCostWithBDI = parseFloat((parseFloat(unitCost) * (1 + parseFloat(BDI))).toFixed(2));
             setCostWithBDI(initialCostWithBDI);
         }
     }, [BDI, unitCost]); // Dependency array
 
-
     const openModal = () => {
 
         console.log('Opening the modal...');
     }
+
     return (
         <tr>
             <td></td>

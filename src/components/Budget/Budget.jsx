@@ -16,12 +16,13 @@ const Budget = () => {
     const [showStageForm, setShowStageForm] = useState(false);
     const [items, setItems] = useState([]);
     const [BDI, setBDI] = useState(0.1); // Initialize the BDI state
-    const handleBDIChange = (newBDI) => {
-        setBDI(newBDI);
-    };
     const [isBDIModalOpen, setBDIModalOpen] = useState(false);
     const [isSearchModalOpen, setSearchModalOpen] = useState(false);
     const [currentStageRefId, setCurrentStageRefId] = useState(null);
+
+    const handleBDIChange = (newBDI) => {
+        setBDI(newBDI);
+    };
 
 
     useEffect(() => {

@@ -10,7 +10,7 @@ function Totals({ items, BDI }) {
         const computedTotalWithoutBDI = items.reduce((sum, item) => {
             if (item.type === 'subitem') {
                 if (typeof item.unitCost !== 'number' || typeof item.quantity !== 'number') {
-
+                    console.warn('Invalid types for unitCost or quantity');
                 }
                 return sum + (item.unitCost * item.quantity);
             }
