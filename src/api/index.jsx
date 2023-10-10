@@ -25,3 +25,19 @@ export const fetchCompositions = async (params) => {
         return [];
     }
 }
+
+
+export const fetchCompositionByCodigo = async (codigo, state = 1, desonerado = 'nao_desonerado') => {
+    try {
+        const endpoint = `${API_URL}/composition/${codigo}/${state}/${desonerado}/`; // Note the new endpoint
+        const response = await axios.get(endpoint);
+
+        return {
+            ...response.data,
+            unitCost: parseFloat(response.data.total_cost)  // Convert total_cost to a number
+        };
+    } catch (error) {
+        console.error("Error fetching composition:", error);
+        return null;
+    }
+};

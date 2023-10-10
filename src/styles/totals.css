@@ -38,8 +38,3 @@
 .grand-total:hover {
     background-color: #e8e8e8;
 }
-
-/* Optional: Space out the titles a bit for better readability */
-div>div:first-child {
-    margin-right: 8px;
-}

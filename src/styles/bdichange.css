@@ -1,0 +1,7 @@
+.bdi-cell {
+    cursor: pointer;
+}
+
+.bdi-cell:hover {
+    background-color: #f0f0f0;
+}

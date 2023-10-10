@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { fetchCompositions } from '../../api';
-import ReactDOM from 'react-dom';
+import { fetchCompositions, fetchCompositionByCodigo } from '../../api';
+import Modal from './Modal';
 
-const SearchCompositionModal = ({ isOpen, onClose, onAddComposition }) => {
+const SearchCompositionModal = ({ isOpen, onClose, onAddComposition, stageRefId }) => {
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResults, setSearchResults] = useState([]);
 
@@ -24,49 +24,52 @@ const SearchCompositionModal = ({ isOpen, onClose, onAddComposition }) => {
         }
     }
 
-    const handleAddFromSearch = (composition) => {
-        onAddComposition(composition);
+    const handleAddFromSearch = async (composition) => {
+        try {
+            const fetchedData = await fetchCompositionByCodigo(composition.codigo);
+            onAddComposition(fetchedData, stageRefId);
+            console.log(fetchedData);
+            setSearchQuery("");
+            setSearchResults([]);
+        } catch (error) {
+            console.error("Error fetching composition:", error);
+        }
         onClose();
     }
 
-    return isOpen ? ReactDOM.createPortal(
-        <div className={`modal fade show`} tabIndex="-1" role="dialog" style={{ display: 'block' }}>
-            <div className="modal-dialog" role="document">
-                <div className="modal-content">
-                    <div className="modal-header">
-                        <h5 className="modal-title">Search Compositions</h5>
-                        <button type="button" className="close" aria-label="Close" onClick={onClose}>
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div className="modal-body">
-                        <div className="input-group mb-3">
-                            <input
-                                type="text"
-                                className="form-control"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                placeholder="Search compositions..."
-                            />
-                            <div className="input-group-append">
-                                <button className="btn btn-outline-secondary" type="button" onClick={handleSearch}>Search</button>
-                            </div>
-                        </div>
-                        <ul className="list-group">
-                            {searchResults.map(result => (
-                                <li key={result.id} className="list-group-item d-flex justify-content-between align-items-center">
-                                    {result.name} ({result.codigo})
-                                    <button className="btn btn-primary btn-sm" onClick={() => handleAddFromSearch(result)}>Add</button>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+    const handleClose = () => {
+        // Clear search query and results
+        setSearchQuery("");
+        setSearchResults([]);
+        onClose();
+    }
+
+    return (
+        <Modal isOpen={isOpen} onClose={handleClose}>
+            <h5 className="modal-title">Pesquise composições por Código SINAPI ou Descrição</h5>
+            <div className="input-group mb-3">
+                <input
+                    type="text"
+                    className="form-control"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search compositions..."
+                />
+                <div className="input-group-append">
+                    <button className="btn btn-outline-secondary" type="button" onClick={handleSearch}>Search</button>
                 </div>
             </div>
-        </div>,
-        document.body
-    ) : null;
-}
+            <ul className="list-group">
+                {searchResults.map(result => (
+                    <li key={result.id} className="list-group-item d-flex justify-content-between align-items-center">
+                        {result.name} ({result.codigo})
+                        <button className="btn btn-primary btn-sm" onClick={() => handleAddFromSearch(result)}>+ Add</button>
+                    </li>
+                ))}
+            </ul>
+        </Modal>
+    );
+};
 
 
 function isNumeric(str) {

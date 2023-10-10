@@ -1,21 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const BDI = 0.1;
-const SubItem = ({ subItem, onSubItemChange }) => {
+
+const SubItem = ({ subItem, onSubItemChange, BDI }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [codigo, setCodigo] = useState(subItem.codigo || '');
     const [name, setDescription] = useState(subItem.name || '');
     const [unit, setUnit] = useState(subItem.unit || '');
     const [quantity, setQuantity] = useState(subItem.quantity || 0);
-    const [unitCost, setUnitCost] = useState(subItem.comp_cost || 0);
+    const [unitCost, setUnitCost] = useState(subItem.unitCost || 0);
     const [refId, setRefId] = useState(subItem.refId || '');
-
-
-
+    const [costWithBDI, setCostWithBDI] = useState(0);  // Initialize to zero or some other default value
 
 
     const handleUpdate = () => {
-        const costWithBDI = parseFloat((unitCost * (1 + BDI)).toFixed(2));
+
+
+        const calculatedCostWithBDI = parseFloat((parseFloat(unitCost) * (1 + parseFloat(BDI))).toFixed(2));
+        setCostWithBDI(calculatedCostWithBDI);
         const updatedSubItem = {
             ...subItem,
             refId,
@@ -32,6 +33,14 @@ const SubItem = ({ subItem, onSubItemChange }) => {
         setIsEditing(false); // revert to display mode after update
     };
 
+    useEffect(() => {
+        // Note: Make sure to validate BDI and unitCost before performing calculations.
+        if (BDI !== null && unitCost !== null) {
+            const initialCostWithBDI = parseFloat((parseFloat(unitCost) * (1 + parseFloat(BDI))).toFixed(2));
+            setCostWithBDI(initialCostWithBDI);
+        }
+    }, [BDI, unitCost]); // Dependency array
+
 
     const openModal = () => {
 
@@ -39,12 +48,12 @@ const SubItem = ({ subItem, onSubItemChange }) => {
     }
     return (
         <tr>
+            <td></td>
             {isEditing ? (
                 <td><input className="form-control" value={refId} onChange={(e) => setRefId(e.target.value)} /></td>
             ) : (
                 <td onClick={() => setIsEditing(true)}>{refId}</td>
             )}
-
 
             {isEditing ? (
                 <td>{codigo} </td>
@@ -59,6 +68,7 @@ const SubItem = ({ subItem, onSubItemChange }) => {
             )}
 
             <td>{unit}</td>
+
             {isEditing ? (
                 <td><input className="form-control" type="number" value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} /></td>
             ) : (
@@ -68,11 +78,8 @@ const SubItem = ({ subItem, onSubItemChange }) => {
             <td>{parseFloat(unitCost).toLocaleString(`pt-BR`, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
             <td> {/* Cost with BDI column */}
                 {isEditing ?
-                    <button className="btn btn-primary" onClick={() => {
-                        // handle update logic here
-                        setIsEditing(false);
-                    }}>Update</button> :
-                    parseFloat((unitCost * (1 + BDI)).toFixed(2)).toLocaleString(`pt-BR`, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                    <button className="btn btn-primary" onClick={handleUpdate}>Update</button> :
+                    parseFloat(costWithBDI).toLocaleString(`pt-BR`, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
                 }
             </td>
 
@@ -82,7 +89,6 @@ const SubItem = ({ subItem, onSubItemChange }) => {
                     parseFloat((unitCost * quantity * (1 + BDI)).toFixed(2)).toLocaleString(`pt-BR`, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
                 }
             </td>
-
         </tr>
     );
 };

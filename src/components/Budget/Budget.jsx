@@ -6,21 +6,38 @@ import SearchCompositionModal from './SearchCompositionModal';
 import { v4 as uuidv4 } from 'uuid';
 import '../../styles/budget.css'
 import processData from './InitialData';
-
-const BDI = 0.1;
+import BDIChangeModal from './BDIChangeModal';
 
 
 const Budget = () => {
 
     const [name, setName] = useState('');
     const [isEditingTitle, setIsEditingTitle] = useState(false);
-    const [showModal, setShowModal] = useState(false);
     const [showStageForm, setShowStageForm] = useState(false);
     const [items, setItems] = useState([]);
+    const [BDI, setBDI] = useState(0.1); // Initialize the BDI state
+    const handleBDIChange = (newBDI) => {
+        setBDI(newBDI);
+    };
+    const [isBDIModalOpen, setBDIModalOpen] = useState(false);
+    const [isSearchModalOpen, setSearchModalOpen] = useState(false);
+    const [currentStageRefId, setCurrentStageRefId] = useState(null);
+
 
     useEffect(() => {
         const fetchData = async () => {
             const initialItems = await processData();
+            for (let item of initialItems) {
+                if (item.type === "subitem" && item.unitCost !== null) {
+                    item.costWithBDI = parseFloat((parseFloat(item.unitCost) * (1 + parseFloat(BDI))).toFixed(2));
+                }
+            }
+
+            console.log("Initial items after fetching and processing:");
+            initialItems.forEach(item => {
+                console.log(`Name: ${item.name}, UnitCost: ${item.unitCost}`);
+            });
+
             const updatedItems = calculateAllStages(initialItems);
             setItems(sortItems(updatedItems));
 
@@ -30,6 +47,27 @@ const Budget = () => {
 
     }, []);
 
+    useEffect(() => {
+        const updatedItems = [...items];  // Create a shallow copy
+
+        // Recalculate costWithBDI for all subitems
+        for (let item of updatedItems) {
+            if (item.type === "subitem" && item.unitCost !== null) {
+                item.costWithBDI = parseFloat((parseFloat(item.unitCost) * (1 + parseFloat(BDI))).toFixed(2));
+            }
+        }
+
+        // Recalculate totals for all stages
+        const finalUpdatedItems = calculateAllStages(updatedItems);
+
+        // Update the state
+        setItems(finalUpdatedItems);
+    }, [BDI]);
+
+    const handleOpenCompositionModal = (stageRefId) => {
+        setSearchModalOpen(true);
+        setCurrentStageRefId(stageRefId);
+    };
 
 
     const addStage = () => {
@@ -73,9 +111,16 @@ const Budget = () => {
         let total = 0;
 
         const directChildren = getChildren(refId, items);
+
         for (let child of directChildren) {
+
             if (child.type === "subitem") {
-                total += (child.costWithBDI || child.unitCost) * child.quantity;  // or use the calculated cost with BDI
+                const costWithBDI = parseFloat(child.costWithBDI) || 0;  // Make sure it's a float, default to 0 if it's not a number
+                const quantity = parseFloat(child.quantity) || 0; // Same here
+                console.log(`Cost with BDI: ${costWithBDI}, Quantity: ${quantity}`); // Debug 4: Log the values
+
+
+                total += costWithBDI * quantity;
             } else if (child.type === "stage") {
                 total += calculateTotalForRefId(child.refId, items);
             }
@@ -109,9 +154,11 @@ const Budget = () => {
             } else {
                 return prevItems;
             }
+            // Sort the items
+            const sortedUpdatedItems = sortItems(updatedItems);
 
             // Calculate totals for all stages and return
-            return calculateAllStages(updatedItems);
+            return calculateAllStages(sortedUpdatedItems);
         });
     }
 
@@ -128,10 +175,10 @@ const Budget = () => {
         setShowStageForm(false);
     };
 
-    const handleAddComposition = (composition) => {
+    const handleAddComposition = (composition, stageRefId = null) => {
         const newSubItem = {
             idd: uuidv4(),
-            refId: `1.${items.length + 1}`,
+            refId: stageRefId ? `${stageRefId}.1` : `1.${items.length + 1}`, // or whatever logic you want
             type: 'subitem',
             quantity: 1,
             ...composition
@@ -173,29 +220,35 @@ const Budget = () => {
             <div className="topcontainer">
                 <div className="buttons-container">
                     <button className="btn btn-primary mb-2 mr-2" onClick={addStage}>Adicionar Etapa</button>
-                    <button className="btn btn-danger mb-2 mr-2" onClick={() => setShowModal(true)}>Adicionar Composição</button>
+                    <button className="btn btn-danger mb-2 mr-2" onClick={() => setSearchModalOpen(true)}>Adicionar Composição</button>
                 </div>
-                <div className="dados-container my-2">
-                    <table className="table table-bordered" style={{ margin: '10px' }}>
-                        <tbody>
-                            <tr>
-                                <td className="bg-light" style={{ width: '50%' }}>Bancos</td>
-                                <td>SINAPI 09/2023</td>
-                            </tr>
-                            <tr>
-                                <td className="bg-light">BDI</td>
-                                <td>10%</td>
-                            </tr>
-                            <tr>
-                                <td className="bg-light">Encargos Sociais</td>
-                                <td><p>Não desonerada</p>
-                                    <p>Horista</p>
-                                    <p>Mensalista</p>
-                                </td>
-                            </tr>
+                <div className="dados-container my-2" style={{ margin: '10px' }}>
+                    <div className="flex-container">
+                        <div className="flex-row">
+                            <div className="flex-cell bg-light" style={{ width: '50%' }}>Bancos</div>
+                            <div className="flex-cell">SINAPI 09/2023</div>
+                        </div>
+                        <div className="flex-row">
 
-                        </tbody>
-                    </table>
+                            <div className="your-other-content">
+                                <button onClick={() => setBDIModalOpen(true)}>Open BDI Modal</button>
+                                <BDIChangeModal
+                                    initialBDI={BDI}
+                                    onBDIChange={handleBDIChange}
+                                    isOpen={isBDIModalOpen}
+                                    onClose={() => setBDIModalOpen(false)}
+                                />
+                            </div>
+                        </div>
+                        <div className="flex-row">
+                            <div className="flex-cell bg-light">Encargos Sociais</div>
+                            <div className="flex-cell">
+                                <p>Não desonerada</p>
+                                <p>Horista</p>
+                                <p>Mensalista</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -203,8 +256,9 @@ const Budget = () => {
 
             {/* Master Table */}
             <table className="table table-bordered table-hover">
-                <thead className="table-light">
+                <thead className="table-light sticky-header">
                     <tr>
+                        <th></th>
                         <th>Item</th>
                         <th>Código</th>
                         <th>Descrição</th>
@@ -219,10 +273,18 @@ const Budget = () => {
                 <tbody>
                     {items.map(item => {
                         if (item.type === 'stage') {
-                            return <Stage key={item.idd} stage={item} />;
+                            return <Stage
+                                key={item.idd}
+                                stage={item}
+                                handleOpenCompositionModal={handleOpenCompositionModal}
+                            />;
                         }
                         //Separate SubItem component
-                        return <SubItem key={item.idd} subItem={item} onSubItemChange={handleSubItemChange} />;
+                        return <SubItem
+                            key={item.idd}
+                            subItem={item}
+                            BDI={BDI}
+                            onSubItemChange={handleSubItemChange} />;
                     })}
 
 
@@ -260,9 +322,10 @@ const Budget = () => {
 
 
             <SearchCompositionModal
-                isOpen={showModal}
-                onClose={() => setShowModal(false)}
+                isOpen={isSearchModalOpen}
+                onClose={() => setSearchModalOpen(false)}
                 onAddComposition={handleAddComposition}
+                stageRefId={currentStageRefId}
             />
         </div>
     );

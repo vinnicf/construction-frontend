@@ -33,3 +33,37 @@
 .title:hover {
     border-bottom: 2px dashed #000; // Show a dashed underline on hover
 }
+
+.flex-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-row {
+    display: flex;
+    border-bottom: 1px solid #ccc;
+}
+
+.flex-cell {
+    flex: 1;
+    padding: 10px;
+    border-right: 1px solid #ccc;
+}
+
+.flex-cell:last-child {
+    border-right: none;
+}
+
+.bg-light {
+    background-color: #f0f0f0;
+}
+
+
+.sticky-header th {
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    /* or your desired color */
+    z-index: 10;
+    /* optional, ensures header is above other elements */
+}
