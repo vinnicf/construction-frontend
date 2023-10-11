@@ -118,8 +118,6 @@ const Budget = () => {
             if (child.type === "subitem") {
                 const costWithBDI = parseFloat(child.costWithBDI) || 0;  // Make sure it's a float, default to 0 if it's not a number
                 const quantity = parseFloat(child.quantity) || 0; // Same here
-                console.log(`Cost with BDI: ${costWithBDI}, Quantity: ${quantity}`); // Debug 4: Log the values
-
 
                 total += costWithBDI * quantity;
             } else if (child.type === "stage") {
@@ -146,15 +144,23 @@ const Budget = () => {
 
     const handleItemChange = (changedItem, action) => {
         setItems(prevItems => {
+            console.log(`handleItemChange called with action: ${action} and idd: ${changedItem.idd}`); // Debug
             let updatedItems;
+
+            console.log("Prev items:", prevItems);
+            console.log("Changed item:", changedItem);
+            console.log("Action:", action);
 
             if (action === 'update') {
                 updatedItems = prevItems.map(item => item.idd === changedItem.idd ? changedItem : item);
             } else if (action === 'add') {
                 updatedItems = [...prevItems, changedItem];
+            } else if (action === 'delete') {
+                updatedItems = prevItems.filter(item => item.idd !== changedItem.idd);
             } else {
                 return prevItems;
             }
+
             // Sort the items
             const sortedUpdatedItems = sortItems(updatedItems);
 
@@ -162,6 +168,7 @@ const Budget = () => {
             return calculateAllStages(sortedUpdatedItems);
         });
     }
+
 
     const handleAddStage = (name, refId) => {
         const newStage = {
@@ -191,10 +198,6 @@ const Budget = () => {
 
 
 
-    const handleSubItemChange = (updatedSubItem) => {
-
-        handleItemChange(updatedSubItem, 'update');
-    };
 
 
 
@@ -285,7 +288,7 @@ const Budget = () => {
                             key={item.idd}
                             subItem={item}
                             BDI={BDI}
-                            onSubItemChange={handleSubItemChange} />;
+                            onSubItemChange={handleItemChange} />;
                     })}
 
 

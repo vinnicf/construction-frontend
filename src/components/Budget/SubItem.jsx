@@ -28,8 +28,14 @@ const SubItem = ({ subItem, onSubItemChange, BDI }) => {
             totalCost: unitCost * quantity
         };
         console.log("SubItem update:", updatedSubItem);
-        onSubItemChange(updatedSubItem);
+        onSubItemChange(updatedSubItem, 'update');
         setIsEditing(false); // revert to display mode after update
+    };
+
+    const handleDelete = () => {
+        console.log("Deleting subItem with idd:", subItem.idd);
+        onSubItemChange(subItem, 'delete'); // assuming onSubItemChange prop is essentially handleItemChange
+        setIsEditing(false); // revert to display mode after deletion
     };
 
 
@@ -75,17 +81,23 @@ const SubItem = ({ subItem, onSubItemChange, BDI }) => {
                 <td onClick={() => setIsEditing(true)}>{quantity}</td>
             )}
 
-            <td>{parseFloat(unitCost).toLocaleString(`pt-BR`, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+            <td>{isEditing ?
+                <button className="btn btn-primary" onClick={handleUpdate}>Atualizar</button> :
+                parseFloat(unitCost).toLocaleString(`pt-BR`, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+            }
+            </td>
+
+
             <td> {/* Cost with BDI column */}
                 {isEditing ?
-                    <button className="btn btn-primary" onClick={handleUpdate}>Update</button> :
+                    <button className="btn btn-danger" onClick={handleDelete}>Excluir</button> :
                     parseFloat(costWithBDI).toLocaleString(`pt-BR`, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
                 }
             </td>
 
             <td className='total-display'>
                 {isEditing ?
-                    <button className="btn btn-secondary" onClick={() => setIsEditing(false)}>Cancel</button> :
+                    <button className="btn btn-secondary" onClick={() => setIsEditing(false)}>Cancelar</button> :
                     parseFloat((unitCost * quantity * (1 + BDI)).toFixed(2)).toLocaleString(`pt-BR`, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
                 }
             </td>
