@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import '../../styles/budget.css'
 import processData from './InitialData';
 import BDIChangeModal from './BDIChangeModal';
+import StageAddModal from './StageAddModal';
 
 
 const Budget = () => {
@@ -19,11 +20,13 @@ const Budget = () => {
     const [isBDIModalOpen, setBDIModalOpen] = useState(false);
     const [isSearchModalOpen, setSearchModalOpen] = useState(false);
     const [currentStageRefId, setCurrentStageRefId] = useState(null);
+    const [isAddStageModalOpen, setIsAddStageModalOpen] = useState(false);
+
+
 
     const handleBDIChange = (newBDI) => {
         setBDI(newBDI);
     };
-
 
     useEffect(() => {
         const fetchData = async () => {
@@ -170,6 +173,15 @@ const Budget = () => {
     }
 
 
+    const handleOpenAddStageModal = () => {
+        setIsAddStageModalOpen(true);
+    };
+
+    const handleCloseAddStageModal = () => {
+        setIsAddStageModalOpen(false);
+    };
+
+
     const handleAddStage = (name, refId) => {
         const newStage = {
             idd: uuidv4(),
@@ -180,7 +192,6 @@ const Budget = () => {
 
         // 2. Use handleItemChange for adding stage
         handleItemChange(newStage, 'add');
-        setShowStageForm(false);
     };
 
     const handleAddComposition = (composition, stageRefId = null) => {
@@ -223,7 +234,7 @@ const Budget = () => {
 
             <div className="topcontainer">
                 <div className="buttons-container">
-                    <button className="btn btn-primary mb-2 mr-2" onClick={addStage}>Adicionar Etapa</button>
+                    <button className="btn btn-primary mb-2 mr-2" onClick={handleOpenAddStageModal}>Adicionar Etapa</button>
                     <button className="btn btn-danger mb-2 mr-2" onClick={() => setSearchModalOpen(true)}>Adicionar Composição</button>
                 </div>
                 <div className="dados-container my-2" style={{ margin: '10px' }}>
@@ -256,7 +267,11 @@ const Budget = () => {
                 </div>
             </div>
 
-
+            <StageAddModal
+                isOpen={isAddStageModalOpen}
+                onClose={handleCloseAddStageModal}
+                onAddStage={handleAddStage}
+            />
 
             {/* Master Table */}
             <table className="table table-bordered table-hover">
@@ -290,7 +305,6 @@ const Budget = () => {
                             BDI={BDI}
                             onSubItemChange={handleItemChange} />;
                     })}
-
 
                     {
                         showStageForm && (
