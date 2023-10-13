@@ -21,11 +21,16 @@ const Budget = () => {
     const [isSearchModalOpen, setSearchModalOpen] = useState(false);
     const [currentStageRefId, setCurrentStageRefId] = useState(null);
     const [isAddStageModalOpen, setIsAddStageModalOpen] = useState(false);
+    const [desonerado, setDesonerado] = useState('nao_desonerado');
 
 
 
     const handleBDIChange = (newBDI) => {
         setBDI(newBDI);
+    };
+
+    const handleDesoneradoChange = (newDesonerado) => {
+        setDesonerado(newDesonerado);
     };
 
     useEffect(() => {
@@ -249,7 +254,9 @@ const Budget = () => {
                                 <button onClick={() => setBDIModalOpen(true)}>Open BDI Modal</button>
                                 <BDIChangeModal
                                     initialBDI={BDI}
+                                    initialDesonerado={desonerado}
                                     onBDIChange={handleBDIChange}
+                                    onDesoneradoChange={handleDesoneradoChange}
                                     isOpen={isBDIModalOpen}
                                     onClose={() => setBDIModalOpen(false)}
                                 />
@@ -296,6 +303,8 @@ const Budget = () => {
                                 key={item.idd}
                                 stage={item}
                                 handleOpenCompositionModal={handleOpenCompositionModal}
+                                handleOpenAddStageModal={handleOpenAddStageModal}
+                                onStageChange={handleItemChange}
                             />;
                         }
                         //Separate SubItem component

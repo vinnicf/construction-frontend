@@ -24,6 +24,12 @@ const SearchCompositionModal = ({ isOpen, onClose, onAddComposition, stageRefId 
         }
     }
 
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            handleSearch();
+        }
+    };
+
     const handleAddFromSearch = async (composition) => {
         try {
             const fetchedData = await fetchCompositionByCodigo(composition.codigo);
@@ -45,25 +51,32 @@ const SearchCompositionModal = ({ isOpen, onClose, onAddComposition, stageRefId 
     }
 
     return (
-        <Modal isOpen={isOpen} onClose={handleClose}>
-            <h5 className="modal-title">Pesquise composições por Código SINAPI ou Descrição</h5>
-            <div className="input-group mb-3">
+        <Modal isOpen={isOpen} onClose={handleClose} title="Pesquise composições por Código SINAPI ou Descrição">
+
+            <div className="input-group mb-3 input-pesquisar">
                 <input
                     type="text"
                     className="form-control"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search compositions..."
+                    onKeyDown={handleKeyDown}
+                    placeholder="Pesquisar composições..."
                 />
                 <div className="input-group-append">
-                    <button className="btn btn-outline-secondary" type="button" onClick={handleSearch}>Search</button>
+                    <button className="btn btn-outline-secondary" type="button" onClick={handleSearch}>Pesquisar</button>
                 </div>
             </div>
             <ul className="list-group">
                 {searchResults.map(result => (
                     <li key={result.id} className="list-group-item d-flex justify-content-between align-items-center">
-                        {result.name} ({result.codigo})
-                        <button className="btn btn-primary btn-sm" onClick={() => handleAddFromSearch(result)}>+ Add</button>
+                        <span className="codigo-column">{result.codigo}</span>
+                        <span className="name-column">{result.name}</span>
+                        <button className="btn btn-primary btn-sm add-button" onClick={() => handleAddFromSearch(result)}>
+                            <svg className="add-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M8 1a1 1 0 0 1 1 1v5h5a1 1 0 0 1 0 2H9v5a1 1 0 0 1-2 0V9H2a1 1 0 0 1 0-2h5V2a1 1 0 0 1 1-1z" />
+                            </svg>
+                            Add
+                        </button>
                     </li>
                 ))}
             </ul>
