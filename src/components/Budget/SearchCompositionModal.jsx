@@ -70,7 +70,7 @@ const SearchCompositionModal = ({ isOpen, onClose, onAddComposition, stageRefId 
                 {searchResults.map(result => (
                     <li key={result.id} className="list-group-item d-flex justify-content-between align-items-center">
                         <span className="codigo-column">{result.codigo}</span>
-                        <span className="name-column">{result.name}</span>
+                        <span className="name-column">{result.name} ({result.unit})</span>
                         <button className="btn btn-primary btn-sm add-button" onClick={() => handleAddFromSearch(result)}>
                             <svg className="add-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M8 1a1 1 0 0 1 1 1v5h5a1 1 0 0 1 0 2H9v5a1 1 0 0 1-2 0V9H2a1 1 0 0 1 0-2h5V2a1 1 0 0 1 1-1z" />

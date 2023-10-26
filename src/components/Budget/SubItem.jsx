@@ -98,7 +98,7 @@ const SubItem = ({ subItem, onSubItemChange, BDI }) => {
             <td className='total-display'>
                 {isEditing ?
                     <button className="btn btn-secondary" onClick={() => setIsEditing(false)}>Cancelar</button> :
-                    parseFloat((unitCost * quantity * (1 + BDI)).toFixed(2)).toLocaleString(`pt-BR`, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                    parseFloat((costWithBDI * quantity).toFixed(2)).toLocaleString(`pt-BR`, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
                 }
             </td>
         </tr>

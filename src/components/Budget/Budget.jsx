@@ -1,22 +1,24 @@
 import React, { useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+
 import Stage from './Stage';
 import SubItem from './SubItem';
 import Totals from './Totals';
 import SearchCompositionModal from './SearchCompositionModal';
-import { v4 as uuidv4 } from 'uuid';
-import '../../styles/budget.css'
 import processData from './InitialData';
 import BDIChangeModal from './BDIChangeModal';
 import StageAddModal from './StageAddModal';
+import { exportToExcel } from '../../api';
+import '../../styles/budget.css'
 
 
 const Budget = () => {
 
     const [name, setName] = useState('');
     const [isEditingTitle, setIsEditingTitle] = useState(false);
-    const [showStageForm, setShowStageForm] = useState(false);
     const [items, setItems] = useState([]);
-    const [BDI, setBDI] = useState(0.1); // Initialize the BDI state
+    const [BDI, setBDI] = useState(0.1);
+    const [showStageForm, setShowStageForm] = useState(false);
     const [isBDIModalOpen, setBDIModalOpen] = useState(false);
     const [isSearchModalOpen, setSearchModalOpen] = useState(false);
     const [currentStageRefId, setCurrentStageRefId] = useState(null);
@@ -32,6 +34,10 @@ const Budget = () => {
     const handleDesoneradoChange = (newDesonerado) => {
         setDesonerado(newDesonerado);
     };
+
+    useEffect(() => {
+        window.logItems = () => console.log("Items state:", items);
+    }, [items]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -202,7 +208,7 @@ const Budget = () => {
     const handleAddComposition = (composition, stageRefId = null) => {
         const newSubItem = {
             idd: uuidv4(),
-            refId: stageRefId ? `${stageRefId}.1` : `1.${items.length + 1}`, // or whatever logic you want
+            refId: stageRefId ? `${stageRefId}.1` : `1.${items.length + 1}`,
             type: 'subitem',
             quantity: 1,
             ...composition
@@ -212,149 +218,146 @@ const Budget = () => {
         handleItemChange(newSubItem, 'add');
     }
 
-
-
-
-
-
-
     return (
-        <div className="container mt-5">
+        <>
 
-            {
-                isEditingTitle ? (
-                    <input
-                        className="form-control mb-3"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        onBlur={() => setIsEditingTitle(false)}  // Exit edit mode when the input loses focus
-                        autoFocus   // Automatically focus the input when it's rendered
-                    />
-                ) : (
-                    <div className="title mb-3" onClick={() => setIsEditingTitle(true)}>
-                        {name || "Clique para adicionar um nome ao orçamento"}
-                    </div>
-                )
-            }
+            <div className="container mt-5">
 
-            <div className="topcontainer">
-                <div className="buttons-container">
-                    <button className="btn btn-primary mb-2 mr-2" onClick={handleOpenAddStageModal}>Adicionar Etapa</button>
-                    <button className="btn btn-danger mb-2 mr-2" onClick={() => setSearchModalOpen(true)}>Adicionar Composição</button>
-                </div>
-                <div className="dados-container my-2" style={{ margin: '10px' }}>
-                    <div className="flex-container">
-                        <div className="flex-row">
-                            <div className="flex-cell bg-light" style={{ width: '50%' }}>Bancos</div>
-                            <div className="flex-cell">SINAPI 09/2023</div>
+                {
+                    isEditingTitle ? (
+                        <input
+                            className="form-control mb-3"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            onBlur={() => setIsEditingTitle(false)}  // Exit edit mode when the input loses focus
+                            autoFocus   // Automatically focus the input when it's rendered
+                        />
+                    ) : (
+                        <div className="title mb-3" onClick={() => setIsEditingTitle(true)}>
+                            {name || "Clique para adicionar um nome ao orçamento"}
                         </div>
-                        <div className="flex-row">
+                    )
+                }
 
-                            <div className="your-other-content">
-                                <button onClick={() => setBDIModalOpen(true)}>Open BDI Modal</button>
-                                <BDIChangeModal
-                                    initialBDI={BDI}
-                                    initialDesonerado={desonerado}
-                                    onBDIChange={handleBDIChange}
-                                    onDesoneradoChange={handleDesoneradoChange}
-                                    isOpen={isBDIModalOpen}
-                                    onClose={() => setBDIModalOpen(false)}
-                                />
+                <div className="topcontainer">
+                    <div className="buttons-container">
+                        <button className="btn btn-primary mb-2 mr-2" onClick={handleOpenAddStageModal}>Adicionar Etapa</button>
+                        <button className="btn btn-danger mb-2 mr-2" onClick={() => setSearchModalOpen(true)}>Adicionar Composição</button>
+                    </div>
+                    <div className="dados-container my-2" style={{ margin: '10px' }}>
+                        <div className="flex-container">
+                            <div className="flex-row">
+                                <div className="flex-cell bg-light" style={{ width: '50%' }}>Bancos</div>
+                                <div className="flex-cell">SINAPI 08/2023</div>
+                            </div>
+                            <div className="flex-row">
+
+                                <div className="your-other-content">
+                                    <button onClick={() => exportToExcel(items, BDI, name, desonerado)}>Export to Excel</button>
+
+                                    <button onClick={() => setBDIModalOpen(true)}>Open BDI Modal</button>
+                                    <BDIChangeModal
+                                        initialBDI={BDI}
+                                        initialDesonerado={desonerado}
+                                        onBDIChange={handleBDIChange}
+                                        onDesoneradoChange={handleDesoneradoChange}
+                                        isOpen={isBDIModalOpen}
+                                        onClose={() => setBDIModalOpen(false)}
+                                    />
+                                </div>
+                            </div>
+                            <div className="flex-row">
+                                <div className="flex-cell bg-light">Encargos Sociais</div>
+                                <div className="flex-cell">
+                                    <p>Não desonerada</p>
+                                </div>
                             </div>
                         </div>
-                        <div className="flex-row">
-                            <div className="flex-cell bg-light">Encargos Sociais</div>
-                            <div className="flex-cell">
-                                <p>Não desonerada</p>
-                                <p>Horista</p>
-                                <p>Mensalista</p>
-                            </div>
-                        </div>
                     </div>
                 </div>
-            </div>
 
-            <StageAddModal
-                isOpen={isAddStageModalOpen}
-                onClose={handleCloseAddStageModal}
-                onAddStage={handleAddStage}
-            />
+                <StageAddModal
+                    isOpen={isAddStageModalOpen}
+                    onClose={handleCloseAddStageModal}
+                    onAddStage={handleAddStage}
+                />
 
-            {/* Master Table */}
-            <table className="table table-bordered table-hover">
-                <thead className="table-light sticky-header">
-                    <tr>
-                        <th></th>
-                        <th>Item</th>
-                        <th>Código</th>
-                        <th>Descrição</th>
-                        <th>Unidade</th>
-                        <th>QTD</th>
-                        <th>Custo Unit</th>
-                        <th>Custo com BDI</th>
-                        <th>Total</th>
+                {/* Master Table */}
+                <table className="table table-bordered table-hover">
+                    <thead className="table-light sticky-header tabela-header">
+                        <tr>
+                            <th></th>
+                            <th>Item</th>
+                            <th>Código</th>
+                            <th>Descrição</th>
+                            <th>Unidade</th>
+                            <th>QTD</th>
+                            <th>Custo Unit</th>
+                            <th>Custo com BDI</th>
+                            <th>Total</th>
 
-                    </tr>
-                </thead>
-                <tbody>
-                    {items.map(item => {
-                        if (item.type === 'stage') {
-                            return <Stage
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {items.map(item => {
+                            if (item.type === 'stage') {
+                                return <Stage
+                                    key={item.idd}
+                                    stage={item}
+                                    handleOpenCompositionModal={handleOpenCompositionModal}
+                                    handleOpenAddStageModal={handleOpenAddStageModal}
+                                    onStageChange={handleItemChange}
+                                />;
+                            }
+                            //Separate SubItem component
+                            return <SubItem
                                 key={item.idd}
-                                stage={item}
-                                handleOpenCompositionModal={handleOpenCompositionModal}
-                                handleOpenAddStageModal={handleOpenAddStageModal}
-                                onStageChange={handleItemChange}
-                            />;
+                                subItem={item}
+                                BDI={BDI}
+                                onSubItemChange={handleItemChange} />;
+                        })}
+
+                        {
+                            showStageForm && (
+                                <tr>
+                                    <td>
+                                        <input
+                                            className="form-control"
+                                            placeholder="Enter refId"
+                                            onChange={(e) => setTempRefId(e.target.value)}
+                                        />
+                                    </td>
+                                    <td>
+                                        <input
+                                            className="form-control"
+                                            placeholder="Enter Stage Name"
+                                            onChange={(e) => setTempStageName(e.target.value)}
+                                        />
+                                    </td>
+                                    <td>
+                                        <button onClick={() => handleAddStage(tempStageName, tempRefId)}>Add</button>
+                                    </td>
+                                </tr>
+                            )
                         }
-                        //Separate SubItem component
-                        return <SubItem
-                            key={item.idd}
-                            subItem={item}
-                            BDI={BDI}
-                            onSubItemChange={handleItemChange} />;
-                    })}
 
-                    {
-                        showStageForm && (
-                            <tr>
-                                <td>
-                                    <input
-                                        className="form-control"
-                                        placeholder="Enter refId"
-                                        onChange={(e) => setTempRefId(e.target.value)}
-                                    />
-                                </td>
-                                <td>
-                                    <input
-                                        className="form-control"
-                                        placeholder="Enter Stage Name"
-                                        onChange={(e) => setTempStageName(e.target.value)}
-                                    />
-                                </td>
-                                <td>
-                                    <button onClick={() => handleAddStage(tempStageName, tempRefId)}>Add</button>
-                                </td>
-                            </tr>
-                        )
-                    }
-
-                </tbody>
+                    </tbody>
 
 
 
-            </table>
+                </table>
 
-            <Totals items={items} BDI={BDI} />
+                <Totals items={items} BDI={BDI} />
 
 
-            <SearchCompositionModal
-                isOpen={isSearchModalOpen}
-                onClose={() => setSearchModalOpen(false)}
-                onAddComposition={handleAddComposition}
-                stageRefId={currentStageRefId}
-            />
-        </div>
+                <SearchCompositionModal
+                    isOpen={isSearchModalOpen}
+                    onClose={() => setSearchModalOpen(false)}
+                    onAddComposition={handleAddComposition}
+                    stageRefId={currentStageRefId}
+                />
+            </div>
+        </>
     );
 };
 

@@ -41,3 +41,33 @@ export const fetchCompositionByCodigo = async (codigo, state = 1, desonerado = '
         return null;
     }
 };
+
+export const exportToExcel = async (items, BDI, name, desonerado) => {
+    const response = await fetch(`${API_URL}/export_excel/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            items,
+            BDI,
+            name,
+            desonerado
+        })
+    });
+
+    if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        // the filename you want
+        a.download = 'your_budget.xlsx';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+    } else {
+        // handle error, maybe notify user
+    }
+}
