@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import { parse, v4 as uuidv4 } from 'uuid';
 
 import Stage from './Stage';
 import SubItem from './SubItem';
@@ -14,81 +14,121 @@ import '../../styles/budget.css'
 
 const Budget = () => {
 
-    const [name, setName] = useState('');
+
     const [isEditingTitle, setIsEditingTitle] = useState(false);
-    const [items, setItems] = useState([]);
-    const [BDI, setBDI] = useState(0.1);
     const [showStageForm, setShowStageForm] = useState(false);
     const [isBDIModalOpen, setBDIModalOpen] = useState(false);
     const [isSearchModalOpen, setSearchModalOpen] = useState(false);
     const [currentStageRefId, setCurrentStageRefId] = useState(null);
     const [isAddStageModalOpen, setIsAddStageModalOpen] = useState(false);
-    const [desonerado, setDesonerado] = useState('nao_desonerado');
+    const [appData, setAppData] = useState({
+        items: [],
+        BDI: 0.1,
+        desonerado: 'nao_desonerado',
+        name: ''
+    });
 
 
 
     const handleBDIChange = (newBDI) => {
-        setBDI(newBDI);
+        setAppData(prevAppData => {
+            return { ...prevAppData, BDI: newBDI };
+        });
     };
 
     const handleDesoneradoChange = (newDesonerado) => {
-        setDesonerado(newDesonerado);
+        setAppData(prevAppData => {
+            return { ...prevAppData, desonerado: newDesonerado };
+        });
     };
 
     useEffect(() => {
         window.logItems = () => console.log("Items state:", items);
-    }, [items]);
+    }, [appData.items]);
 
     useEffect(() => {
         const fetchData = async () => {
-            const initialItems = await processData();
-            for (let item of initialItems) {
+            let newAppData = {
+                items: [],
+                BDI: 0.1,
+                desonerado: 'nao_desonerado',
+                name: ''
+            };
+
+            const localData = localStorage.getItem('appData');
+
+            if (localData) {
+                // Existing data in local storage
+                const parsedData = JSON.parse(localData);
+                newAppData = { ...newAppData, ...parsedData };
+            } else {
+                // No existing data, fetch initial data
+                const initialItems = await processData();
+                newAppData.items = initialItems;
+            }
+
+            // Perform calculations
+            for (let item of newAppData.items) {
                 if (item.type === "subitem" && item.unitCost !== null) {
-                    item.costWithBDI = parseFloat((parseFloat(item.unitCost) * (1 + parseFloat(BDI))).toFixed(2));
+                    item.costWithBDI = Math.floor(parseFloat(item.unitCost) * (1 + parseFloat(newAppData.BDI)) * 100) / 100;
                 }
             }
 
-            console.log("Initial items after fetching and processing:");
-            initialItems.forEach(item => {
-                console.log(`Name: ${item.name}, UnitCost: ${item.unitCost}`);
-            });
+            newAppData.items = sortItems(calculateAllStages(newAppData.items));
 
-            const updatedItems = calculateAllStages(initialItems);
-            setItems(sortItems(updatedItems));
-
+            // Save to state and local storage
+            setAppData(newAppData);
+            localStorage.setItem('appData', JSON.stringify(newAppData));
         };
 
         fetchData();
-
     }, []);
 
+
+
     useEffect(() => {
-        const updatedItems = [...items];  // Create a shallow copy
+        console.log('Items:', appData.items);
+    }, [appData.items]);
+
+
+
+    useEffect(() => {
+        if (appData.items.length > 0) {
+            localStorage.setItem('appData', JSON.stringify(appData));
+        }
+    }, [appData.items, appData.BDI, appData.desonerado, appData.name]);
+
+
+    useEffect(() => {
+        const updatedItems = [...appData.items];  // Create a shallow copy
+
+        let hasChanges = false;
 
         // Recalculate costWithBDI for all subitems
         for (let item of updatedItems) {
             if (item.type === "subitem" && item.unitCost !== null) {
-                item.costWithBDI = parseFloat((parseFloat(item.unitCost) * (1 + parseFloat(BDI))).toFixed(2));
+                const newCostWithBDI = Math.floor(parseFloat(item.unitCost) * (1 + parseFloat(appData.BDI)) * 100) / 100;
+                if (newCostWithBDI !== item.costWithBDI) {
+                    item.costWithBDI = newCostWithBDI;
+                    hasChanges = true;
+                }
             }
         }
 
-        // Recalculate totals for all stages
-        const finalUpdatedItems = calculateAllStages(updatedItems);
-
-        // Update the state
-        setItems(finalUpdatedItems);
-    }, [BDI]);
+        // If there are any changes, then update the state and local storage
+        if (hasChanges) {
+            const finalUpdatedItems = calculateAllStages(updatedItems);
+            const newAppData = { ...appData, items: finalUpdatedItems }; // Updating only the 'items' field of appData
+            setAppData(newAppData);
+            localStorage.setItem('appData', JSON.stringify(newAppData)); // Update local storage too
+            console.log('Updating items in the updateditems effect');
+        }
+    }, [appData.BDI]);  // Dependency array includes only appData.BDI
 
     const handleOpenCompositionModal = (stageRefId) => {
         setSearchModalOpen(true);
         setCurrentStageRefId(stageRefId);
     };
-
-
-    const addStage = () => {
-        setShowStageForm(true);
-    };
-
 
     const sortItems = (itemsToSort) => {
 
@@ -112,7 +152,6 @@ const Budget = () => {
             return partsA.length - partsB.length;
         });
 
-
         return sortedItems;
     };
 
@@ -133,7 +172,13 @@ const Budget = () => {
                 const costWithBDI = parseFloat(child.costWithBDI) || 0;  // Make sure it's a float, default to 0 if it's not a number
                 const quantity = parseFloat(child.quantity) || 0; // Same here
 
-                total += costWithBDI * quantity;
+                // Round down to 2 decimal places before adding to total
+                const cwbInteger = costWithBDI * 100
+                const product = (cwbInteger * quantity) / 100
+                const roundedProduct = Math.floor(product * 100) / 100;
+
+                total += roundedProduct;
+
             } else if (child.type === "stage") {
                 total += calculateTotalForRefId(child.refId, items);
             }
@@ -148,17 +193,17 @@ const Budget = () => {
             if (item.type === "stage") {
                 item.totalCost = calculateTotalForRefId(item.refId, items);
 
-                console.log(`Total for stage ${item.name} (RefId: ${item.refId}): ${item.totalCost}`);
             }
         }
 
         return [...items];  // return a new array to ensure re-render
     }
 
-
     const handleItemChange = (changedItem, action) => {
-        setItems(prevItems => {
-            console.log(`handleItemChange called with action: ${action} and idd: ${changedItem.idd}`); // Debug
+        console.log('Updating items in the handleitemchange function')
+
+        setAppData(prevAppData => {
+            const prevItems = prevAppData.items;  // Extract previous items from appData
             let updatedItems;
 
             console.log("Prev items:", prevItems);
@@ -178,8 +223,14 @@ const Budget = () => {
             // Sort the items
             const sortedUpdatedItems = sortItems(updatedItems);
 
-            // Calculate totals for all stages and return
-            return calculateAllStages(sortedUpdatedItems);
+            // Calculate totals for all stages
+            const finalUpdatedItems = calculateAllStages(sortedUpdatedItems);
+
+            return {
+                ...prevAppData,
+                items: finalUpdatedItems
+            };
+
         });
     }
 
@@ -208,7 +259,7 @@ const Budget = () => {
     const handleAddComposition = (composition, stageRefId = null) => {
         const newSubItem = {
             idd: uuidv4(),
-            refId: stageRefId ? `${stageRefId}.1` : `1.${items.length + 1}`,
+            refId: stageRefId ? `${stageRefId}.1` : `1.${appData.items.length + 1}`,
             type: 'subitem',
             quantity: 1,
             ...composition
@@ -227,14 +278,20 @@ const Budget = () => {
                     isEditingTitle ? (
                         <input
                             className="form-control mb-3"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            value={appData.name}
+                            onChange={(e) => {
+                                const newName = e.target.value;
+                                setAppData(prevAppData => ({
+                                    ...prevAppData,
+                                    name: newName
+                                }));
+                            }}
                             onBlur={() => setIsEditingTitle(false)}  // Exit edit mode when the input loses focus
                             autoFocus   // Automatically focus the input when it's rendered
                         />
                     ) : (
                         <div className="title mb-3" onClick={() => setIsEditingTitle(true)}>
-                            {name || "Clique para adicionar um nome ao orçamento"}
+                            {appData.name || "Clique para adicionar um nome ao orçamento"}
                         </div>
                     )
                 }
@@ -257,8 +314,8 @@ const Budget = () => {
 
                                     <button onClick={() => setBDIModalOpen(true)}>Open BDI Modal</button>
                                     <BDIChangeModal
-                                        initialBDI={BDI}
-                                        initialDesonerado={desonerado}
+                                        initialBDI={appData.BDI}
+                                        initialDesonerado={appData.desonerado}
                                         onBDIChange={handleBDIChange}
                                         onDesoneradoChange={handleDesoneradoChange}
                                         isOpen={isBDIModalOpen}
@@ -299,7 +356,7 @@ const Budget = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {items.map(item => {
+                        {appData.items.map(item => {
                             if (item.type === 'stage') {
                                 return <Stage
                                     key={item.idd}
@@ -313,7 +370,7 @@ const Budget = () => {
                             return <SubItem
                                 key={item.idd}
                                 subItem={item}
-                                BDI={BDI}
+                                BDI={appData.BDI}
                                 onSubItemChange={handleItemChange} />;
                         })}
 
@@ -347,7 +404,7 @@ const Budget = () => {
 
                 </table>
 
-                <Totals items={items} BDI={BDI} />
+                <Totals items={appData.items} BDI={appData.BDI} />
 
 
                 <SearchCompositionModal

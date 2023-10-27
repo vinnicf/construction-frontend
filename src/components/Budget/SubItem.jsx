@@ -14,7 +14,8 @@ const SubItem = ({ subItem, onSubItemChange, BDI }) => {
 
     const handleUpdate = () => {
 
-        const calculatedCostWithBDI = parseFloat((parseFloat(unitCost) * (1 + parseFloat(BDI))).toFixed(2));
+        const calculatedCostWithBDI = Math.floor(parseFloat(unitCost) * (1 + parseFloat(BDI)) * 100) / 100;
+
         setCostWithBDI(calculatedCostWithBDI);
         const updatedSubItem = {
             ...subItem,
@@ -42,7 +43,7 @@ const SubItem = ({ subItem, onSubItemChange, BDI }) => {
     useEffect(() => {
 
         if (BDI !== null && unitCost !== null) {
-            const initialCostWithBDI = parseFloat((parseFloat(unitCost) * (1 + parseFloat(BDI))).toFixed(2));
+            const initialCostWithBDI = Math.floor(parseFloat(unitCost) * (1 + parseFloat(BDI)) * 100) / 100;
             setCostWithBDI(initialCostWithBDI);
         }
     }, [BDI, unitCost]); // Dependency array
