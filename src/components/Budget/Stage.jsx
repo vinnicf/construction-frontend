@@ -32,7 +32,7 @@ const Stage = ({ stage, handleOpenCompositionModal, handleOpenAddStageModal, onS
                 onMouseOver={handleHover}
                 onMouseLeave={handleMouseLeave}
             >
-                {isEditing ? (<td></td>) : (
+                {isEditing ? (<td className="hidden-cell"></td>) : (
                     <td style={{ width: '0', padding: '0', margin: '0' }}>
                         <div className="stage-actions" style={{ display: isHovered ? 'block' : 'none' }}>
                             <ButtonDeck
@@ -54,8 +54,8 @@ const Stage = ({ stage, handleOpenCompositionModal, handleOpenAddStageModal, onS
                 {isEditing ? (
                     <td colSpan="5">
                         <input className="form-control" value={name} onChange={(e) => setName(e.target.value)} />
-                        <button className="btn btn-primary" onClick={handleUpdate}>Update</button>
-                        <button className="btn btn-secondary" onClick={() => setIsEditing(false)}>Cancel</button>
+                        <button className="btn btn-primary" onClick={handleUpdate}>Atualizar</button>
+                        <button className="btn btn-secondary" onClick={() => setIsEditing(false)}>Cancelar</button>
                     </td>
                 ) : (
                     <td colSpan="5" className="stage-name" onClick={() => setIsEditing(true)}>{name}</td>

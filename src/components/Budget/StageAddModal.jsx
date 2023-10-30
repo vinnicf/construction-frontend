@@ -15,8 +15,8 @@ const StageAddModal = ({ isOpen, onClose, onAddStage }) => {
     };
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose}>
-            <h5 className="modal-title">Adicionar Etapa</h5>
+        <Modal isOpen={isOpen} onClose={onClose} title="Adicionar Etapa no Orçamento">
+
             <div className="modal-body">
                 <input
                     type="text"

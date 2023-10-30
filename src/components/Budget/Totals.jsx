@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../../styles/totals.css'
+import Decimal from 'decimal.js';
 
 function Totals({ items, BDI }) {
     const [totalWithoutBDI, setTotalWithoutBDI] = useState(0);
@@ -12,21 +13,32 @@ function Totals({ items, BDI }) {
                 if (typeof item.unitCost !== 'number' || typeof item.quantity !== 'number') {
                     console.warn('Invalid types for unitCost or quantity');
                 }
-                return sum + (item.unitCost * item.quantity);
+                const product = new Decimal(item.unitCost).times(item.quantity).toDecimalPlaces(2, Decimal.ROUND_DOWN);
+                return new Decimal(sum).plus(product);
             }
-            return sum;
-        }, 0);
+            return new Decimal(sum);
+        }, new Decimal(0));
 
-        const computedTotalBDI = items.reduce((sum, item) => {
+
+
+        const computedTotal = items.reduce((sum, item) => {
             if (item.type === 'subitem') {
-                return sum + (item.unitCost * BDI * item.quantity);
+                if (typeof item.costWithBDI !== 'number' || typeof item.quantity !== 'number') {
+                    console.warn('Invalid types for unitCost or quantity');
+                    return new Decimal(sum);
+                }
+                const product = new Decimal(item.costWithBDI || 0).times(item.quantity).toDecimalPlaces(2, Decimal.ROUND_DOWN);
+                return new Decimal(sum).plus(product);
             }
-            return sum;
-        }, 0);
+            return new Decimal(sum);
+        }, new Decimal(0));
 
-        setTotalWithoutBDI(computedTotalWithoutBDI);
-        setTotalBDI(computedTotalBDI);
-        setGrandTotal(computedTotalWithoutBDI + computedTotalBDI);
+
+        const computedTotalBDI = computedTotal.minus(computedTotalWithoutBDI);
+
+        setTotalWithoutBDI(computedTotalWithoutBDI.toNumber());
+        setTotalBDI(computedTotalBDI.toNumber());
+        setGrandTotal(computedTotal.toNumber());
     }, [items, BDI]);
 
     return (

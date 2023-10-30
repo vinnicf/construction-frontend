@@ -6,10 +6,11 @@ import SubItem from './SubItem';
 import Totals from './Totals';
 import SearchCompositionModal from './SearchCompositionModal';
 import processData from './InitialData';
-import BDIChangeModal from './BDIChangeModal';
+import TopContainer from './TopContainer';
 import StageAddModal from './StageAddModal';
 import { exportToExcel } from '../../api';
 import '../../styles/budget.css'
+import Decimal from 'decimal.js';
 
 
 const Budget = () => {
@@ -43,7 +44,7 @@ const Budget = () => {
     };
 
     useEffect(() => {
-        window.logItems = () => console.log("Items state:", items);
+        window.logItems = () => console.log("Items state:", appData.items);
     }, [appData.items]);
 
     useEffect(() => {
@@ -169,15 +170,13 @@ const Budget = () => {
         for (let child of directChildren) {
 
             if (child.type === "subitem") {
-                const costWithBDI = parseFloat(child.costWithBDI) || 0;  // Make sure it's a float, default to 0 if it's not a number
-                const quantity = parseFloat(child.quantity) || 0; // Same here
+                const costWithBDI = new Decimal(parseFloat(child.costWithBDI) || 0);  // Make sure it's a float, default to 0 if it's not a number
+                const quantity = new Decimal(parseFloat(child.quantity) || 0); // Same here
 
                 // Round down to 2 decimal places before adding to total
-                const cwbInteger = costWithBDI * 100
-                const product = (cwbInteger * quantity) / 100
-                const roundedProduct = Math.floor(product * 100) / 100;
+                const roundedProduct = costWithBDI.times(quantity).toDecimalPlaces(2, Decimal.ROUND_DOWN);
 
-                total += roundedProduct;
+                total += roundedProduct.toNumber();
 
             } else if (child.type === "stage") {
                 total += calculateTotalForRefId(child.refId, items);
@@ -295,43 +294,16 @@ const Budget = () => {
                         </div>
                     )
                 }
-
-                <div className="topcontainer">
-                    <div className="buttons-container">
-                        <button className="btn btn-primary mb-2 mr-2" onClick={handleOpenAddStageModal}>Adicionar Etapa</button>
-                        <button className="btn btn-danger mb-2 mr-2" onClick={() => setSearchModalOpen(true)}>Adicionar Composição</button>
-                    </div>
-                    <div className="dados-container my-2" style={{ margin: '10px' }}>
-                        <div className="flex-container">
-                            <div className="flex-row">
-                                <div className="flex-cell bg-light" style={{ width: '50%' }}>Bancos</div>
-                                <div className="flex-cell">SINAPI 08/2023</div>
-                            </div>
-                            <div className="flex-row">
-
-                                <div className="your-other-content">
-                                    <button onClick={() => exportToExcel(items, BDI, name, desonerado)}>Export to Excel</button>
-
-                                    <button onClick={() => setBDIModalOpen(true)}>Open BDI Modal</button>
-                                    <BDIChangeModal
-                                        initialBDI={appData.BDI}
-                                        initialDesonerado={appData.desonerado}
-                                        onBDIChange={handleBDIChange}
-                                        onDesoneradoChange={handleDesoneradoChange}
-                                        isOpen={isBDIModalOpen}
-                                        onClose={() => setBDIModalOpen(false)}
-                                    />
-                                </div>
-                            </div>
-                            <div className="flex-row">
-                                <div className="flex-cell bg-light">Encargos Sociais</div>
-                                <div className="flex-cell">
-                                    <p>Não desonerada</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <TopContainer
+                    handleOpenAddStageModal={handleOpenAddStageModal}
+                    setSearchModalOpen={setSearchModalOpen}
+                    exportToExcel={exportToExcel}
+                    appData={appData}
+                    setBDIModalOpen={setBDIModalOpen}
+                    isBDIModalOpen={isBDIModalOpen}
+                    handleBDIChange={handleBDIChange}
+                    handleDesoneradoChange={handleDesoneradoChange}
+                />
 
                 <StageAddModal
                     isOpen={isAddStageModalOpen}
@@ -340,10 +312,10 @@ const Budget = () => {
                 />
 
                 {/* Master Table */}
-                <table className="table table-bordered table-hover">
+                <table className="table table-bordered table-hover table-custom">
                     <thead className="table-light sticky-header tabela-header">
-                        <tr>
-                            <th></th>
+                        <tr className='header-row-stick'>
+                            <th style={{ width: '0', padding: '0', margin: '0' }}></th>
                             <th>Item</th>
                             <th>Código</th>
                             <th>Descrição</th>

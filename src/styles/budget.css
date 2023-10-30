@@ -6,13 +6,76 @@
 .buttons-container {
     display: flex;
     gap: 10px;
+    flex: 1;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.add-btn-container {
+    display: flex;
+    gap: 10px;
+    flex: 1;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+
+.edit-btn-container {
+    display: flex;
+    gap: 10px;
+    flex: 1;
+    flex-wrap: wrap;
+    flex-direction: column;
 }
 
 .buttons-container button {
     height: auto;
-    max-height: 60px;
+    max-height: 50px;
 }
 
+.dados-container {
+    flex-basis: 40%;
+    flex-shrink: 0;
+}
+
+.btn {
+    font-weight: 600;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 5px;
+}
+
+.btn-primary {
+    background-color: #4A90E2;
+}
+
+.btn-danger {
+    background-color: #E94E77;
+}
+
+.btn-secondary {
+    background-color: #AAB2BD;
+}
+
+.btn-success {
+    background-color: #50E3A4;
+}
+
+.btn-warning {
+    background-color: #F8E71C;
+}
+
+.btn-dark {
+    background-color: #414345;
+}
+
+/* Add classes for SVG icons */
+.btn-icon {
+    margin-right: 5px;
+}
 
 .stage-name {
     font-weight: 600;

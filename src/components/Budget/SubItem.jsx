@@ -55,7 +55,7 @@ const SubItem = ({ subItem, onSubItemChange, BDI }) => {
 
     return (
         <tr>
-            <td></td>
+            <td style={{ width: '0', padding: '0', margin: '0' }}></td>
             {isEditing ? (
                 <td><input className="form-control" value={refId} onChange={(e) => setRefId(e.target.value)} /></td>
             ) : (

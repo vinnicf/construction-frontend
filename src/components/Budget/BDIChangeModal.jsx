@@ -50,8 +50,8 @@ const BDIChangeModal = ({ initialBDI, initialDesonerado, onBDIChange, onDesonera
                 </div>
             </div>
             <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={onClose}>Close</button>
-                <button type="button" className="btn btn-primary" onClick={handleSubmit}>Save changes</button>
+                <button type="button" className="btn btn-secondary" onClick={onClose}>Fechar</button>
+                <button type="button" className="btn btn-primary" onClick={handleSubmit}>Salvar</button>
             </div>
         </Modal>
     );
