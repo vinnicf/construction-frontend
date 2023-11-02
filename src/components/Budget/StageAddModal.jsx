@@ -20,22 +20,22 @@ const StageAddModal = ({ isOpen, onClose, onAddStage }) => {
             <div className="modal-body">
                 <input
                     type="text"
-                    className="form-control mt-3"
+                    className="form-control mt-3 m-2"
                     placeholder="Nº do Item"
                     value={newRefId}
                     onChange={(e) => setNewRefId(e.target.value)}
                 />
                 <input
                     type="text"
-                    className="form-control"
+                    className="form-control m-2"
                     placeholder="Nome da Etapa"
                     value={newStageName}
                     onChange={(e) => setNewStageName(e.target.value)}
                 />
             </div>
             <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={onClose}>Close</button>
-                <button type="button" className="btn btn-primary" onClick={handleSubmit}>Add Stage</button>
+                <button type="button" className="btn btn-secondary" onClick={onClose}>Fechar</button>
+                <button type="button" className="btn btn-primary" onClick={handleSubmit}>Adicionar Etapa</button>
             </div>
         </Modal>
     );

@@ -1,14 +1,4 @@
-.topcontainer {
-    display: flex;
-    justify-content: space-between;
-    border: 1px solid #e9e9e9;  /* Give a border for the top container */
-}
-
-.buttons-container {
-    display: flex;
-    gap: 15px;  /* Increase the gap for better spacing */
-    align-items: center;
-}
+.topcontainer {}
 
 .add-btn-container,
 .edit-btn-container {
@@ -16,23 +6,141 @@
     gap: 10px;
 }
 
+.buttons-container {}
+
 .dados-container {
     flex-basis: 40%;
     flex-shrink: 0;
-    border: 1px solid #e9e9e9;  /* Add a border for consistency */
-    padding: 15px;  /* Add some padding for aeration */
+    border: 1px solid #e9e9e9;
+    /* Add a border for consistency */
+    padding: 15px;
+    /* Add some padding for aeration */
 }
+
+.buttons-container button {
+    height: auto;
+}
+
+
+.custom-btn:hover {
+    background-color: #F5F5F5;
+    /* light gray background on hover */
+}
+
+.icon {
+    width: 60px;
+    /* icon width */
+    height: 60px;
+    /* icon height */
+    margin-bottom: 10px;
+    /* spacing between icon and text */
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
 
 .btn {
     font-weight: 600;
     padding: 10px 20px;
-    border: none;
     border-radius: 5px;
     margin: 5px;
-    box-shadow: none;  /* Removing the shadow for a flatter design */
-    transition: all 0.3s ease;  /* Smooth hover transition */
+    box-shadow: none;
+    /* Removing the shadow for a flatter design */
+    transition: all 0.3s ease;
+    /* Smooth hover transition */
 }
 
 .btn:hover {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  /* Adding shadow on hover for a lift effect */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Adding shadow on hover for a lift effect */
+}
+
+.menu-btn-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 10px 0;
+}
+
+
+
+.btn-limited {
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+}
+
+
+
+
+.btn-icon {
+    margin-right: 5px;
+
+}
+
+.btn-icon img {
+    width: 24px;
+    height: 24px;
+    vertical-align: middle;
+    /* this helps align the SVG in line with the text */
+}
+
+.fat-button {
+    background-color: #ebe9e5;
+    border-width: 1px;
+    border-color: #000;
+    color: #000;
+    display: flex;
+    gap: 10px;
+    padding: 20px;
+    justify-content: space-between;
+    max-width: 150px;
+    max-height: 150px;
+    flex-direction: column;
+    text-align: center;
+    flex-grow: 1;
+    aspect-ratio: 1 / 1;
+    width: 33%;
+    padding: 0;
+    align-items: center;
+}
+
+.fat-button img {
+    fill: #000;
+    width: 50px;
+    height: 50px;
+    vertical-align: middle;
+
+}
+
+
+.add-btn-icon {
+    padding-top: 15px;
+}
+
+.add-btn-text {
+    padding-bottom: 15px;
+}
+
+#excel-btn {
+    border-width: 1px;
+    background-color: #f5fff7;
+    border-color: #054f12;
+    color: #054f12
+}
+
+#bdi-btn {
+    border-width: 1px;
+    background-color: #ffffed;
+    border-color: #616119;
+    color: #616119
+}
+
+#clean-btn {
+    border-width: 1px;
+    background-color: #fcebeb;
+    border-color: #611919;
+    color: #611919
 }
