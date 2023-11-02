@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { fetchCompositions, fetchCompositionByCodigo } from '../../api';
+import { fetchInsumos, fetchInsumoByCodigo } from '../../api';
 import Modal from './Modal';
 
-const SearchCompositionModal = ({ isOpen, onClose, onAddComposition, stageRefId, state, desonerado }) => {
+
+
+const SearchInsumoModal = ({ isOpen, onClose, onAddInsumo, stageRefId, state, desonerado }) => {
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResults, setSearchResults] = useState([]);
 
@@ -16,7 +18,7 @@ const SearchCompositionModal = ({ isOpen, onClose, onAddComposition, stageRefId,
             }
             console.log('Search Query:', searchQuery);
             console.log('Params:', params);
-            const results = await fetchCompositions(params);
+            const results = await fetchInsumos(params); // Fetch insumos
             console.log('Fetched Results:', results);
             setSearchResults(results);
         } catch (error) {
@@ -30,29 +32,28 @@ const SearchCompositionModal = ({ isOpen, onClose, onAddComposition, stageRefId,
         }
     };
 
-    const handleAddFromSearch = async (composition) => {
+    const handleAddFromSearch = async (insumo) => {
         try {
-            const fetchedData = await fetchCompositionByCodigo(composition.codigo, state, desonerado);
-            onAddComposition(fetchedData, stageRefId);
+            const fetchedData = await fetchInsumoByCodigo(insumo.codigo, state, desonerado);
+
+            onAddInsumo(fetchedData, stageRefId);
             console.log(fetchedData);
             setSearchQuery("");
             setSearchResults([]);
         } catch (error) {
-            console.error("Error fetching composition:", error);
+            console.error("Error fetching insumo:", error);
         }
         onClose();
     }
 
     const handleClose = () => {
-        // Clear search query and results
         setSearchQuery("");
         setSearchResults([]);
         onClose();
     }
 
     return (
-        <Modal isOpen={isOpen} onClose={handleClose} title="Pesquise composições por Código SINAPI ou Descrição">
-
+        <Modal isOpen={isOpen} onClose={handleClose} title="Pesquise insumos por Código SINAPI ou Descrição">
             <div className="input-group mb-3 input-pesquisar">
                 <input
                     type="text"
@@ -84,9 +85,8 @@ const SearchCompositionModal = ({ isOpen, onClose, onAddComposition, stageRefId,
     );
 };
 
-
 function isNumeric(str) {
     return !isNaN(str) && !isNaN(parseFloat(str));
 }
 
-export default SearchCompositionModal;
+export default SearchInsumoModal;

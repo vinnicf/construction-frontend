@@ -5,6 +5,7 @@ import Stage from './Stage';
 import SubItem from './SubItem';
 import Totals from './Totals';
 import SearchCompositionModal from './SearchCompositionModal';
+import SearchInsumoModal from './SearchInsumoModal';
 import processData from './InitialData';
 import TopContainer from './TopContainer';
 import StageAddModal from './StageAddModal';
@@ -15,21 +16,20 @@ import Decimal from 'decimal.js';
 
 const Budget = () => {
 
-
     const [isEditingTitle, setIsEditingTitle] = useState(false);
     const [showStageForm, setShowStageForm] = useState(false);
     const [isBDIModalOpen, setBDIModalOpen] = useState(false);
     const [isSearchModalOpen, setSearchModalOpen] = useState(false);
+    const [isInsumoModalOpen, setInsumoModalOpen] = useState(false);
     const [currentStageRefId, setCurrentStageRefId] = useState(null);
     const [isAddStageModalOpen, setIsAddStageModalOpen] = useState(false);
     const [appData, setAppData] = useState({
         items: [],
         BDI: 0.1,
         desonerado: 'nao_desonerado',
+        state: 'RS',
         name: ''
     });
-
-
 
     const handleBDIChange = (newBDI) => {
         setAppData(prevAppData => {
@@ -41,6 +41,14 @@ const Budget = () => {
         setAppData(prevAppData => {
             return { ...prevAppData, desonerado: newDesonerado };
         });
+    };
+
+    const handleOpenAddInsumoModal = () => {
+        setInsumoModalOpen(true);
+    };
+
+    const handleCloseAddInsumoModal = () => {
+        setInsumoModalOpen(false);
     };
 
     useEffect(() => {
@@ -268,11 +276,23 @@ const Budget = () => {
         handleItemChange(newSubItem, 'add');
     }
 
+    const handleAddInsumo = (insumo, stageRefId = null) => {
+        const newInsumo = {
+            idd: uuidv4(),
+            refId: stageRefId ? `${stageRefId}.1` : `1.${appData.items.length + 1}`,
+            type: 'insumo',  // Set the type to 'insumo'
+            quantity: 1,
+            ...insumo
+        };
+
+        // Use handleItemChange for adding an insumo
+        handleItemChange(newInsumo, 'add');
+    }
+
     return (
         <>
 
             <div className="container mt-5">
-
                 {
                     isEditingTitle ? (
                         <input
@@ -297,6 +317,7 @@ const Budget = () => {
                 <TopContainer
                     handleOpenAddStageModal={handleOpenAddStageModal}
                     setSearchModalOpen={setSearchModalOpen}
+                    handleOpenAddInsumoModal={handleOpenAddInsumoModal}
                     exportToExcel={exportToExcel}
                     appData={appData}
                     setBDIModalOpen={setBDIModalOpen}
@@ -310,6 +331,8 @@ const Budget = () => {
                     onClose={handleCloseAddStageModal}
                     onAddStage={handleAddStage}
                 />
+
+
 
                 {/* Master Table */}
                 <table className="table table-bordered table-hover table-custom">
@@ -384,7 +407,19 @@ const Budget = () => {
                     onClose={() => setSearchModalOpen(false)}
                     onAddComposition={handleAddComposition}
                     stageRefId={currentStageRefId}
+                    state={appData.state}
+                    desonerado={appData.desonerado}
                 />
+
+                <SearchInsumoModal
+                    isOpen={isInsumoModalOpen}
+                    onClose={() => setInsumoModalOpen(false)}
+                    onAddInsumo={handleAddInsumo}
+                    stageRefId={currentStageRefId}
+                    state={appData.state}
+                    desonerado={appData.desonerado}
+                />
+
             </div>
         </>
     );
