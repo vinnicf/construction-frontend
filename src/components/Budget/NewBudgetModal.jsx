@@ -39,6 +39,7 @@ const NewBudgetModal = ({ isOpen, onClose, onSubmit }) => {
     return (
         <Modal isOpen={isOpen} onClose={onClose} title="Criar Novo Orçamento">
             <div className="modal-body">
+                <div></div>
                 <form onSubmit={handleSubmit}>
 
                     {/* Name input */}
@@ -90,7 +91,7 @@ const NewBudgetModal = ({ isOpen, onClose, onSubmit }) => {
 
                     {/* Desonerado status input */}
                     <div className="mb-3">
-                        <label htmlFor="desonerado" className="form-label">Status</label>
+                        <label htmlFor="desonerado" className="form-label">Encargos Sociais</label>
                         <select
                             className="form-select"
                             id="desonerado"

@@ -54,9 +54,7 @@ function TopContainer(props) {
 
                     <BDIChangeModal
                         initialBDI={appData.BDI}
-                        initialDesonerado={appData.desonerado}
                         onBDIChange={handleBDIChange}
-                        onDesoneradoChange={handleDesoneradoChange}
                         isOpen={isBDIModalOpen}
                         onClose={() => setBDIModalOpen(false)}
                     />

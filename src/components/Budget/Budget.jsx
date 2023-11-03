@@ -10,6 +10,7 @@ import processData from './InitialData';
 import TopContainer from './TopContainer';
 import StageAddModal from './StageAddModal';
 import NewBudgetModal from './NewBudgetModal';
+import ModalMensagem from './ModalMensagem';
 import { exportToExcel } from '../../api';
 import '../../styles/budget.css'
 import Decimal from 'decimal.js';
@@ -25,6 +26,7 @@ const Budget = () => {
     const [isNewBudgetModalOpen, setNewBudgetModalOpen] = useState(false);
     const [currentStageRefId, setCurrentStageRefId] = useState(null);
     const [isAddStageModalOpen, setIsAddStageModalOpen] = useState(false);
+    const [isWelcomeModalOpen, setIsWelcomeModalOpen] = useState(false);
     const [appData, setAppData] = useState({
         items: [],
         BDI: 0.1,
@@ -62,17 +64,31 @@ const Budget = () => {
         setNewBudgetModalOpen(true);
     }
 
-
+    const handleCloseWelcomeModal = () => {
+        setIsWelcomeModalOpen(false);
+    };
 
     useEffect(() => {
         window.logItems = () => console.log("Items state:", appData);
     }, [appData]);
 
+    window.toggleModal = () => {
+        setIsWelcomeModalOpen(!isWelcomeModalOpen);
+    };
+
     useEffect(() => {
+        // Check if the modal has been shown before
+        const hasShownModal = localStorage.getItem('hasShownModal');
+        if (!hasShownModal) {
+            setIsWelcomeModalOpen(true);
+            localStorage.setItem('hasShownModal', 'true');
+        }
+
         const fetchData = async () => {
             let newAppData = {
                 items: [],
                 BDI: 0.1,
+                state: 'RS',
                 desonerado: 'nao_desonerado',
                 name: ''
             };
@@ -439,7 +455,7 @@ const Budget = () => {
                     onSubmit={handleNewBudgetFormSubmit}
 
                 />
-
+                <ModalMensagem isOpen={isWelcomeModalOpen} onClose={handleCloseWelcomeModal} />
 
 
             </div>
