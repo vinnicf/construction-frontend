@@ -6,7 +6,7 @@ import '../../styles/modal.css'
 
 const Modal = ({ isOpen, onClose, title, children }) => {
     return isOpen ? ReactDOM.createPortal(
-        <div className={`modal fade show`} tabIndex="-1" role="dialog" style={{ display: 'block' }}>
+        <div className={`modal fade show modal-overlay`} tabIndex="-1" role="dialog" style={{ display: 'block' }}>
             <div className="modal-dialog modal-dialog-centered custom-modal-width" role="document" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
 
                 <div className="modal-content">

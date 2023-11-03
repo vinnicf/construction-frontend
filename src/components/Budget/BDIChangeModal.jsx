@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import '../../styles/bdichange.css'
 import Modal from './Modal';
 
-const BDIChangeModal = ({ initialBDI, initialDesonerado, onBDIChange, onDesoneradoChange, isOpen, onClose }) => {
+const BDIChangeModal = ({ initialBDI, onBDIChange, isOpen, onClose }) => {
     const [newBDI, setNewBDI] = useState(initialBDI * 100); // Convert to percent
-    const [desonerado, setDesonerado] = useState(initialDesonerado); // Maintain the state locally
 
     const handleSubmit = () => {
         onBDIChange(newBDI / 100); // Convert back to decimal
@@ -13,7 +12,7 @@ const BDIChangeModal = ({ initialBDI, initialDesonerado, onBDIChange, onDesonera
     };
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} title="Definir o BDI e Se o Orçamento é Desonerado">
+        <Modal isOpen={isOpen} onClose={onClose} title="Redefinir o BDI">
 
             <div className="modal-body">
                 <div>
@@ -26,28 +25,6 @@ const BDIChangeModal = ({ initialBDI, initialDesonerado, onBDIChange, onDesonera
                     />
                 </div>
 
-                <div>
-                    <label>Status:</label>
-                    <div>
-                        <input
-                            type="radio"
-                            value="desonerado"
-                            checked={desonerado === 'desonerado'}
-                            onChange={() => setDesonerado('desonerado')}
-                        />
-                        <label>Desonerado</label>
-                    </div>
-
-                    <div>
-                        <input
-                            type="radio"
-                            value="nao_desonerado"
-                            checked={desonerado === 'nao_desonerado'}
-                            onChange={() => setDesonerado('nao_desonerado')}
-                        />
-                        <label>Não Desonerado</label>
-                    </div>
-                </div>
             </div>
             <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" onClick={onClose}>Fechar</button>

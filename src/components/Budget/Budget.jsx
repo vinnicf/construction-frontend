@@ -9,6 +9,7 @@ import SearchInsumoModal from './SearchInsumoModal';
 import processData from './InitialData';
 import TopContainer from './TopContainer';
 import StageAddModal from './StageAddModal';
+import NewBudgetModal from './NewBudgetModal';
 import { exportToExcel } from '../../api';
 import '../../styles/budget.css'
 import Decimal from 'decimal.js';
@@ -21,6 +22,7 @@ const Budget = () => {
     const [isBDIModalOpen, setBDIModalOpen] = useState(false);
     const [isSearchModalOpen, setSearchModalOpen] = useState(false);
     const [isInsumoModalOpen, setInsumoModalOpen] = useState(false);
+    const [isNewBudgetModalOpen, setNewBudgetModalOpen] = useState(false);
     const [currentStageRefId, setCurrentStageRefId] = useState(null);
     const [isAddStageModalOpen, setIsAddStageModalOpen] = useState(false);
     const [appData, setAppData] = useState({
@@ -37,23 +39,34 @@ const Budget = () => {
         });
     };
 
-    const handleDesoneradoChange = (newDesonerado) => {
-        setAppData(prevAppData => {
-            return { ...prevAppData, desonerado: newDesonerado };
-        });
+    const handleDesoneradoChange = () => {
+        console.log('Dummy');
+    };
+
+    const handleNewBudgetFormSubmit = (data) => {
+        setAppData(prevData => ({
+            ...prevData,
+            items: [],
+            BDI: data.BDI,
+            desonerado: data.desonerado,
+            state: data.state,
+            name: data.name
+        }));
     };
 
     const handleOpenAddInsumoModal = () => {
         setInsumoModalOpen(true);
     };
 
-    const handleCloseAddInsumoModal = () => {
-        setInsumoModalOpen(false);
-    };
+    const handleOpenNewBudgetModal = () => {
+        setNewBudgetModalOpen(true);
+    }
+
+
 
     useEffect(() => {
-        window.logItems = () => console.log("Items state:", appData.items);
-    }, [appData.items]);
+        window.logItems = () => console.log("Items state:", appData);
+    }, [appData]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -98,7 +111,6 @@ const Budget = () => {
     useEffect(() => {
         console.log('Items:', appData.items);
     }, [appData.items]);
-
 
 
     useEffect(() => {
@@ -316,6 +328,7 @@ const Budget = () => {
                 }
                 <TopContainer
                     handleOpenAddStageModal={handleOpenAddStageModal}
+                    handleOpenNewBudgetModal={handleOpenNewBudgetModal}
                     setSearchModalOpen={setSearchModalOpen}
                     handleOpenAddInsumoModal={handleOpenAddInsumoModal}
                     exportToExcel={exportToExcel}
@@ -358,6 +371,7 @@ const Budget = () => {
                                     stage={item}
                                     handleOpenCompositionModal={handleOpenCompositionModal}
                                     handleOpenAddStageModal={handleOpenAddStageModal}
+                                    handleOpenAddInsumoModal={handleOpenAddInsumoModal}
                                     onStageChange={handleItemChange}
                                 />;
                             }
@@ -419,6 +433,14 @@ const Budget = () => {
                     state={appData.state}
                     desonerado={appData.desonerado}
                 />
+                <NewBudgetModal
+                    isOpen={isNewBudgetModalOpen}
+                    onClose={() => setNewBudgetModalOpen(false)}
+                    onSubmit={handleNewBudgetFormSubmit}
+
+                />
+
+
 
             </div>
         </>

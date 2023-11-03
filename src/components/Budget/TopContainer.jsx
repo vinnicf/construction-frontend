@@ -8,10 +8,16 @@ import Carrinho from '../../assets/carrinho.svg'
 import Parafusos from '../../assets/parafusos.svg'
 import Etapas from '../../assets/etapas.svg'
 
+const desoneradoMapping = {
+    'desonerado': 'Desonerado',
+    'nao_desonerado': 'Não Desonerado'
+};
+
 function TopContainer(props) {
     const {
         handleOpenAddStageModal,
         handleOpenAddInsumoModal,
+        handleOpenNewBudgetModal,
         setSearchModalOpen,
         exportToExcel,
         appData,
@@ -20,6 +26,7 @@ function TopContainer(props) {
         handleBDIChange,
         handleDesoneradoChange
     } = props;
+
 
     return (
 
@@ -58,14 +65,16 @@ function TopContainer(props) {
                     <div className="menu-btn-container mb-3">
                         <button id="excel-btn" className="btn mb-2 mr-2 btn-outline-success" onClick={() => exportToExcel(appData.items, appData.BDI, appData.name, appData.desonerado)}><span className="btn-icon"><img src={SpreadsheetIcon} alt="" /></span> Exportar para Excel</button>
                         <button id="bdi-btn" className="btn btn-outline-warning" onClick={() => setBDIModalOpen(true)}><span className="btn-icon"><img src={EditIcon} alt="" /></span> Editar BDI</button>
-                        <button id="clean-btn" className="btn btn-outline-danger"><span className="btn-icon"><img src={TrashIcon} alt="" /></span>Limpar Orçamento</button>
-                    </div></div>
+                        <button id="clean-btn" className="btn btn-outline-danger" onClick={handleOpenNewBudgetModal} ><span className="btn-icon"><img src={TrashIcon} alt="" /></span>Limpar Orçamento</button>
+                    </div>
+                </div>
+
                 <div className="col-md-4">
                     <div className="dados-container my-2 bg-white p-3 rounded shadow-sm" >
                         <div className="flex-container">
                             <div className="flex-row">
                                 <div className="flex-cell bg-light" style={{ width: '50%' }}>Banco de Dados</div>
-                                <div className="flex-cell"><b>SINAPI 08/2023 - RIO GRANDE DO SUL</b></div>
+                                <div className="flex-cell"><b>SINAPI 09/2023 - {appData.state}</b></div>
                             </div>
                             <div className="flex-row">
                                 <div className="flex-cell bg-light" style={{ width: '50%' }}>BDI</div>
@@ -74,10 +83,11 @@ function TopContainer(props) {
                             <div className="flex-row">
                                 <div className="flex-cell bg-light">Encargos Sociais</div>
                                 <div className="flex-cell">
-                                    <p>Não desonerada</p>
+                                    <p><b>{desoneradoMapping[appData.desonerado]}</b></p>
                                 </div>
                             </div>
-                        </div></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

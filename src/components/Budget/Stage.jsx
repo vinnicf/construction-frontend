@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ButtonDeck from './ButtonDeck';
 
-const Stage = ({ stage, handleOpenCompositionModal, handleOpenAddStageModal, onStageChange }) => {
+const Stage = ({ stage, handleOpenCompositionModal, handleOpenAddStageModal, handleOpenAddInsumoModal, onStageChange }) => {
     const [isHovered, setIsHovered] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [name, setName] = useState(stage.name);
@@ -39,6 +39,7 @@ const Stage = ({ stage, handleOpenCompositionModal, handleOpenAddStageModal, onS
                                 stageRefId={stage.refId}
                                 onOpenCompositionModal={handleOpenCompositionModal}
                                 onOpenAddStageModal={handleOpenAddStageModal}
+                                handleOpenAddInsumoModal={handleOpenAddInsumoModal}
                             />
                         </div>
                     </td>)}

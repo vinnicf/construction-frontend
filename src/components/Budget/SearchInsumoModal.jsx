@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { fetchInsumos, fetchInsumoByCodigo } from '../../api';
 import Modal from './Modal';
 
@@ -7,8 +7,10 @@ import Modal from './Modal';
 const SearchInsumoModal = ({ isOpen, onClose, onAddInsumo, stageRefId, state, desonerado }) => {
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResults, setSearchResults] = useState([]);
+    const [hasSearched, setHasSearched] = useState(false);
 
     const handleSearch = async () => {
+        setHasSearched(true);
         try {
             let params = {};
             if (isNumeric(searchQuery)) {
@@ -49,8 +51,14 @@ const SearchInsumoModal = ({ isOpen, onClose, onAddInsumo, stageRefId, state, de
     const handleClose = () => {
         setSearchQuery("");
         setSearchResults([]);
+        setHasSearched(false);
         onClose();
     }
+
+
+    useEffect(() => {
+        setHasSearched(false);
+    }, [searchQuery]);
 
     return (
         <Modal isOpen={isOpen} onClose={handleClose} title="Pesquise insumos por Código SINAPI ou Descrição">
@@ -67,20 +75,25 @@ const SearchInsumoModal = ({ isOpen, onClose, onAddInsumo, stageRefId, state, de
                     <button className="btn btn-outline-secondary" type="button" onClick={handleSearch}>Pesquisar</button>
                 </div>
             </div>
-            <ul className="list-group">
-                {searchResults.map(result => (
-                    <li key={result.id} className="list-group-item d-flex justify-content-between align-items-center">
-                        <span className="codigo-column">{result.codigo}</span>
-                        <span className="name-column">{result.name} ({result.unit})</span>
-                        <button className="btn btn-primary btn-sm add-button" onClick={() => handleAddFromSearch(result)}>
-                            <svg className="add-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M8 1a1 1 0 0 1 1 1v5h5a1 1 0 0 1 0 2H9v5a1 1 0 0 1-2 0V9H2a1 1 0 0 1 0-2h5V2a1 1 0 0 1 1-1z" />
-                            </svg>
-                            Add
-                        </button>
-                    </li>
-                ))}
-            </ul>
+            {searchResults.length > 0 ? (
+                <ul className="list-group">
+                    {searchResults.map(result => (
+                        <li key={result.id} className="list-group-item d-flex justify-content-between align-items-center">
+                            <span className="codigo-column">{result.codigo}</span>
+                            <span className="name-column">{result.name} ({result.unit})</span>
+                            <button className="btn btn-primary btn-sm add-button" onClick={() => handleAddFromSearch(result)}>
+                                <svg className="add-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M8 1a1 1 0 0 1 1 1v5h5a1 1 0 0 1 0 2H9v5a1 1 0 0 1-2 0V9H2a1 1 0 0 1 0-2h5V2a1 1 0 0 1 1-1z" />
+                                </svg>
+                                Add
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                hasSearched && searchQuery && <div className="text-center mt-3"><b>Nenhuma composição encontrada.</b></div>
+            )
+            }
         </Modal>
     );
 };

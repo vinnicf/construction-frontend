@@ -1,3 +1,27 @@
+/* Overlay/Backdrop */
+.modal-overlay {
+    position: fixed;
+    /* Fix position to the viewport */
+    top: 0;
+    /* Start from the top */
+    left: 0;
+    /* Start from the left */
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Black with 0.5 opacity */
+    z-index: 1000;
+    /* Sit on top of all other elements */
+    display: flex;
+    /* Use flexbox to center the modal content */
+    justify-content: center;
+    /* Center content horizontally */
+    align-items: center;
+    /* Center content vertically */
+}
+
 .custom-modal-width {
     max-width: 800px;
 }
