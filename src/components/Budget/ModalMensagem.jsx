@@ -8,10 +8,9 @@ const ModalMensagem = ({ isOpen, onClose }) => {
             <div className="modal-body">
                 <h5>Bem-vindo à versão de teste do Orcamentor!</h5>
                 <p>
-                    Nesta versão, você pode criar apenas <strong>um orçamento</strong> por vez. Se é a primeira vez que você usa o app, ele carrega um orçamento pequeno de exemplo.
+                    Nesta versão, é possível criar apenas <strong>um orçamento</strong> por vez. No primeiro uso do aplicativo um orçamento de exemplo é carregado.
                 </p>
-                <p>Para iniciar um novo orçamento,
-                    escolha o estado e os encargos sociais desonerado ou não. Em seguida, clique no botão <span className="">Limpar Orçamento</span>.
+                <p>Para iniciar um novo orçamento clique no botão <span className="">Limpar Orçamento</span>. Escolha o estado e os encargos sociais.
                 </p>
                 <p className="alert alert-danger">
                     Importante: O estado e o desonerado <strong>não podem ser alterados</strong> para um orçamento já existente.

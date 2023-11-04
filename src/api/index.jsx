@@ -94,10 +94,23 @@ export const fetchInsumoByCodigo = async (codigo, state = 'RS', desonerado = 'na
 
 
 export const exportToExcel = async (items, BDI, name, desonerado) => {
+
+
+    // Function to get the CSRF token from cookies
+    function getCsrfToken() {
+        return document.cookie.split('; ')
+            .find(row => row.startsWith('csrftoken'))
+            ?.split('=')[1];
+    }
+
+    const csrfToken = getCsrfToken(); // Get the CSRF token
+
+
     const response = await fetch(`${API_URL}/export_excel/`, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken,
         },
         body: JSON.stringify({
             items,
@@ -114,7 +127,7 @@ export const exportToExcel = async (items, BDI, name, desonerado) => {
         a.style.display = 'none';
         a.href = url;
         // the filename you want
-        a.download = 'your_budget.xlsx';
+        a.download = 'orcamentor.xlsx';
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);

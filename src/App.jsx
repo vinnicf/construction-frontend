@@ -10,7 +10,7 @@ function App() {
   return (
     <>
       <Header />
-      <Router>
+      <Router basename="/app/">
         <Routes>
           <Route index path="/" element={<Budget />} />
           <Route path="/composicoes/:codigo" element={<CompositionPage />} />

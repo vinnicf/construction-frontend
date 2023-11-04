@@ -39,7 +39,7 @@ const NewBudgetModal = ({ isOpen, onClose, onSubmit }) => {
     return (
         <Modal isOpen={isOpen} onClose={onClose} title="Criar Novo Orçamento">
             <div className="modal-body">
-                <div></div>
+                <div><p className="alert alert-danger">Esta ação removerá todos os itens do seu orçamento atual</p></div>
                 <form onSubmit={handleSubmit}>
 
                     {/* Name input */}
