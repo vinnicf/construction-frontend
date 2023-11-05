@@ -5,10 +5,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from './components/Header';
 import Budget from './components/Budget/Budget';
 import CompositionPage from './components/Composicoes/CompositionPage';
+import SidebarPortal from './components/SidebarPortal';
 
 function App() {
   return (
     <>
+
       <Header />
       <Router basename="/app/">
         <Routes>

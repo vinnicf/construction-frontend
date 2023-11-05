@@ -296,6 +296,7 @@ const Budget = () => {
             idd: uuidv4(),
             refId: stageRefId ? `${stageRefId}.1` : `1.${appData.items.length + 1}`,
             type: 'subitem',
+            subtype: 'composition',
             quantity: 1,
             ...composition
         };
@@ -308,7 +309,8 @@ const Budget = () => {
         const newInsumo = {
             idd: uuidv4(),
             refId: stageRefId ? `${stageRefId}.1` : `1.${appData.items.length + 1}`,
-            type: 'insumo',  // Set the type to 'insumo'
+            type: 'subitem',
+            subtype: 'insumo',
             quantity: 1,
             ...insumo
         };

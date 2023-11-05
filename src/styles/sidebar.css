@@ -1,0 +1,67 @@
+/* Transition classes from react-transition-group */
+.sidebar-enter {
+    max-width: 0;
+    opacity: 0;
+    transition: all 300ms ease-in;
+}
+
+.sidebar-enter-active {
+    max-width: 250px;
+    /* Adjust to your sidebar's width */
+    opacity: 1;
+}
+
+.sidebar-exit {
+    max-width: 250px;
+    opacity: 1;
+    transition: all 300ms ease-out;
+}
+
+.sidebar-exit-active {
+    max-width: 0;
+    opacity: 0;
+}
+
+/* Custom styling for the sidebar */
+.sidebar {
+    width: 250px;
+    /* Adjust to your preferred width */
+    background-color: #333;
+    /* Your preferred background color */
+    color: white;
+    /* Adjust text color accordingly */
+    height: 100vh;
+    /* Full viewport height */
+    position: fixed;
+    /* Make it stick to the left */
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+    /* In case your content is longer than the viewport */
+    z-index: 1000;
+    /* Make sure the sidebar stacks on top of other content */
+    /* Additional styles for your sidebar */
+}
+
+
+.sidebar-nav {
+    padding-top: 10px;
+    /* Space for the top of the sidebar */
+}
+
+.nav-link {
+    color: white;
+    /* Adjust link color to match the sidebar */
+}
+
+.nav-link:hover {
+    background-color: #555;
+    /* Slight hover effect for links */
+}
+
+/* Class to control the collapsed state */
+.sidebar.collapsed {
+    max-width: 0;
+    overflow-x: hidden;
+    transition: all 300ms ease-out;
+}

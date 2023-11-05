@@ -20,7 +20,6 @@ function Totals({ items, BDI }) {
         }, new Decimal(0));
 
 
-
         const computedTotal = items.reduce((sum, item) => {
             if (item.type === 'subitem') {
                 if (typeof item.costWithBDI !== 'number' || typeof item.quantity !== 'number') {
