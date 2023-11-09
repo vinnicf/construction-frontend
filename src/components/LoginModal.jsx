@@ -34,13 +34,11 @@ const LoginModal = () => {
         navigate(-1); // This will close the modal by navigating back in history
     };
 
-
-
     return (
         <Modal isOpen={isOpen} onClose={handleClose} title="Login">
             <div className="modal-body">
                 <div>
-                    <label>Username:</label>
+                    <label>Usuário:</label>
                     <input
                         type="text"
                         className="form-control"
@@ -49,7 +47,7 @@ const LoginModal = () => {
                     />
                 </div>
                 <div>
-                    <label>Password:</label>
+                    <label>Senha:</label>
                     <input
                         type="password"
                         className="form-control"
@@ -60,7 +58,7 @@ const LoginModal = () => {
             </div>
             <div className="modal-footer">
 
-                <button type="button" className="btn btn-primary" onClick={handleSubmit}>Login</button>
+                <button type="button" className="btn btn-primary" onClick={handleSubmit}>Entrar</button>
             </div>
         </Modal>
     );

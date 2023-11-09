@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { parse, v4 as uuidv4 } from 'uuid';
+import AuthContext from '../../AuthContext';
 
 import Stage from './Stage';
 import SubItem from './SubItem';
@@ -18,6 +19,7 @@ import Decimal from 'decimal.js';
 
 const Budget = () => {
 
+    const { user } = useContext(AuthContext);
     const [isEditingTitle, setIsEditingTitle] = useState(false);
     const [showStageForm, setShowStageForm] = useState(false);
     const [isBDIModalOpen, setBDIModalOpen] = useState(false);
@@ -83,6 +85,7 @@ const Budget = () => {
             setIsWelcomeModalOpen(true);
             localStorage.setItem('hasShownModal', 'true');
         }
+        console.log(user)
 
         const fetchData = async () => {
             let newAppData = {
@@ -321,7 +324,7 @@ const Budget = () => {
 
     return (
         <>
-
+        <div>Olá {user.username}</div>
             <div className="container mt-5">
                 {
                     isEditingTitle ? (

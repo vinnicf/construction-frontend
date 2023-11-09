@@ -42,4 +42,4 @@ const Sidebar = () => {
     );
 };
 
-export default Sidebar; // Again, don't forget the default export
+export default Sidebar;
