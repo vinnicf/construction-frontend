@@ -134,13 +134,6 @@ const Budget = () => {
         console.log('Items:', appData.items);
     }, [appData.items]);
 
-    // Remove this useEffect block for now
-    //    useEffect(() => {
-    //        if (appData.items.length > 0) {
-    //            localStorage.setItem('appData', JSON.stringify(appData));
-    //        }
-    //    }, [appData.items, appData.BDI, appData.desonerado, appData.name]);
-
 
     useEffect(() => {
         const updatedItems = [...appData.items];  // Create a shallow copy
