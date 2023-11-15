@@ -12,16 +12,16 @@ const Header = () => {
                 <span className="navbar-toggler-icon"></span>
             </button>
             <div className="collapse navbar-collapse" id="navbarNav">
-            <ul className="navbar-nav">
-                <li className="nav-item">
-                    <a className="nav-link" href="https://orcamentor.com/sinapi/" target='blank'>Composições</a>
-                </li>
-                <li className="nav-item">
-                    <a className="nav-link" href="https://orcamentor.com/insumos/" target='blank'>Insumos</a>
-                </li>
-            </ul>
+                <ul className="navbar-nav">
+                    <li className="nav-item">
+                        <a className="nav-link" href="https://orcamentor.com/sinapi/" target='blank'>Composições</a>
+                    </li>
+                    <li className="nav-item">
+                        <a className="nav-link" href="https://orcamentor.com/insumos/" target='blank'>Insumos</a>
+                    </li>
+                </ul>
 
-        </div>
+            </div>
 
         </nav>
     );

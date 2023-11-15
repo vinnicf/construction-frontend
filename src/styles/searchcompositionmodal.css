@@ -1,0 +1,23 @@
+.add-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    /* Adjust the width as needed */
+    height: 32px;
+    /* Adjust the height as needed */
+    padding: 0;
+    border: none;
+
+    /* Bootstrap primary color */
+    color: white;
+}
+
+.add-button:hover {
+
+    /* Darker blue on hover */
+}
+
+.add-icon {
+    display: inline-block;
+}

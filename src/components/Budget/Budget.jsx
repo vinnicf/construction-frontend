@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { parse, v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import AuthContext from '../../AuthContext';
 
 import Stage from './Stage';
@@ -13,8 +13,10 @@ import StageAddModal from './StageAddModal';
 import NewBudgetModal from './NewBudgetModal';
 import ModalMensagem from './ModalMensagem';
 import { exportToExcel } from '../../api';
+import { fetchOrcamento, transformApiDataToAppFormat, createOrcamentoItem, updateOrcamentoItem, deleteOrcamentoItem } from '../../api/orcamentoapi';
 import '../../styles/budget.css'
 import Decimal from 'decimal.js';
+
 
 
 const Budget = () => {
@@ -29,6 +31,7 @@ const Budget = () => {
     const [currentStageRefId, setCurrentStageRefId] = useState(null);
     const [isAddStageModalOpen, setIsAddStageModalOpen] = useState(false);
     const [isWelcomeModalOpen, setIsWelcomeModalOpen] = useState(false);
+
     const [appData, setAppData] = useState({
         items: [],
         BDI: 0.1,
@@ -96,19 +99,21 @@ const Budget = () => {
                 name: ''
             };
 
-            const localData = localStorage.getItem('appData');
+            try {
+                const orcamentoData = await fetchOrcamento(5);
+                console.log('Fetched Orcamento Data:', orcamentoData);
+                if (orcamentoData) {
+                    newAppData = transformApiDataToAppFormat(orcamentoData);
 
-            if (localData) {
-                // Existing data in local storage
-                const parsedData = JSON.parse(localData);
-                newAppData = { ...newAppData, ...parsedData };
-            } else {
-                // No existing data, fetch initial data
-                const initialItems = await processData();
-                newAppData.items = initialItems;
+                } else {
+                    const initialItems = await processData();
+                    newAppData.items = initialItems;
+                }
+            } catch (error) {
+                console.error('Error fetching Orcamento data:', error);
+
             }
 
-            // Perform calculations
             for (let item of newAppData.items) {
                 if (item.type === "subitem" && item.unitCost !== null) {
                     item.costWithBDI = Math.floor(parseFloat(item.unitCost) * (1 + parseFloat(newAppData.BDI)) * 100) / 100;
@@ -116,10 +121,8 @@ const Budget = () => {
             }
 
             newAppData.items = sortItems(calculateAllStages(newAppData.items));
-
-            // Save to state and local storage
             setAppData(newAppData);
-            localStorage.setItem('appData', JSON.stringify(newAppData));
+
         };
 
         fetchData();
@@ -131,12 +134,12 @@ const Budget = () => {
         console.log('Items:', appData.items);
     }, [appData.items]);
 
-
-    useEffect(() => {
-        if (appData.items.length > 0) {
-            localStorage.setItem('appData', JSON.stringify(appData));
-        }
-    }, [appData.items, appData.BDI, appData.desonerado, appData.name]);
+    // Remove this useEffect block for now
+    //    useEffect(() => {
+    //        if (appData.items.length > 0) {
+    //            localStorage.setItem('appData', JSON.stringify(appData));
+    //        }
+    //    }, [appData.items, appData.BDI, appData.desonerado, appData.name]);
 
 
     useEffect(() => {
@@ -171,6 +174,13 @@ const Budget = () => {
     };
 
     const sortItems = (itemsToSort) => {
+
+        // Check for items with undefined or null refId
+        itemsToSort.forEach(item => {
+            if (typeof item.refId !== 'string') {
+                console.log('Item with invalid refId:', item);
+            }
+        });
 
         // Create a shallow copy for immutable sorting
         const itemsToSortCopy = [...itemsToSort];
@@ -237,40 +247,86 @@ const Budget = () => {
         return [...items];  // return a new array to ensure re-render
     }
 
-    const handleItemChange = (changedItem, action) => {
-        console.log('Updating items in the handleitemchange function')
+    const handleItemChange = async (changedItem, action) => {
+        let updatedItems = [...appData.items];
+        let itemWithoutId = changedItem;
+        console.log("Initial changedItem:", changedItem);
 
-        setAppData(prevAppData => {
-            const prevItems = prevAppData.items;  // Extract previous items from appData
-            let updatedItems;
+        if (action === 'add') {
+            // Optimistically add the item
+            const { id, ...tempItemWithoutId } = changedItem;
+            itemWithoutId = tempItemWithoutId;
 
-            console.log("Prev items:", prevItems);
-            console.log("Changed item:", changedItem);
-            console.log("Action:", action);
+            // Optimistically add the item (without ID)
+            updatedItems.push(itemWithoutId);
 
-            if (action === 'update') {
-                updatedItems = prevItems.map(item => item.idd === changedItem.idd ? changedItem : item);
-            } else if (action === 'add') {
-                updatedItems = [...prevItems, changedItem];
+            console.log("Before API call - Optimistically added item:", updatedItems);
+
+        } else if (action === 'update') {
+            // Optimistically update the item
+            updatedItems = updatedItems.map(item => item.id === changedItem.id ? changedItem : item);
+            console.log("Optimistically updated item:", updatedItems);
+        } else if (action === 'delete') {
+            // Optimistically remove the item
+            updatedItems = updatedItems.filter(item => item.id !== changedItem.id);
+        }
+
+        // Apply sorting and calculations
+        const sortedUpdatedItems = sortItems(updatedItems);
+        const finalUpdatedItems = calculateAllStages(sortedUpdatedItems);
+
+        // Update state optimistically
+        setAppData(prevAppData => ({
+            ...prevAppData,
+            items: finalUpdatedItems
+        }));
+
+        try {
+            // Make the API call
+            if (action === 'add') {
+                const newItemFromApi = await createOrcamentoItem(itemWithoutId);
+                console.log("New item from API:", newItemFromApi);
+
+                // Replace the item with the one returned from the API
+                updatedItems = updatedItems.map(item => {
+                    if (item === itemWithoutId) {
+                        console.log("Replacing item:", item, "with:", newItemFromApi);
+                        return newItemFromApi;
+                    }
+                    return item;
+                });
+                console.log("Updated items after API call:", updatedItems);
+
+                // Apply sorting and calculations
+                const sortedUpdatedItems = sortItems(updatedItems);
+                console.log("Sorted Updated items:", sortedUpdatedItems);
+                const finalUpdatedItems = calculateAllStages(sortedUpdatedItems);
+                console.log("final updated items:", finalUpdatedItems);
+
+                // Update state with the final list of items including the new item from API
+                setAppData(prevAppData => ({
+                    ...prevAppData,
+                    items: finalUpdatedItems
+                }));
+
+
+
+            } else if (action === 'update') {
+                await updateOrcamentoItem(changedItem.id, changedItem);
+
+
             } else if (action === 'delete') {
-                updatedItems = prevItems.filter(item => item.idd !== changedItem.idd);
-            } else {
-                return prevItems;
+                await deleteOrcamentoItem(changedItem.id);
             }
+        } catch (error) {
+            console.error('Error handling item change:', error);
+            // If an error occurs, revert the optimistic update
+            // Fetch the latest data from the API or roll back to the previous state
+        }
+    };
 
-            // Sort the items
-            const sortedUpdatedItems = sortItems(updatedItems);
 
-            // Calculate totals for all stages
-            const finalUpdatedItems = calculateAllStages(sortedUpdatedItems);
 
-            return {
-                ...prevAppData,
-                items: finalUpdatedItems
-            };
-
-        });
-    }
 
 
     const handleOpenAddStageModal = () => {
@@ -323,8 +379,8 @@ const Budget = () => {
     }
 
     return (
-        <>
-        <div>Olá {user.username}</div>
+        <div id="main-container">
+            <div>Olá {user.username}</div>
             <div className="container mt-5">
                 {
                     isEditingTitle ? (
@@ -398,7 +454,7 @@ const Budget = () => {
                             }
                             //Separate SubItem component
                             return <SubItem
-                                key={item.idd}
+                                key={item.id}
                                 subItem={item}
                                 BDI={appData.BDI}
                                 onSubItemChange={handleItemChange} />;
@@ -436,7 +492,6 @@ const Budget = () => {
 
                 <Totals items={appData.items} BDI={appData.BDI} />
 
-
                 <SearchCompositionModal
                     isOpen={isSearchModalOpen}
                     onClose={() => setSearchModalOpen(false)}
@@ -464,7 +519,7 @@ const Budget = () => {
 
 
             </div>
-        </>
+        </div>
     );
 };
 

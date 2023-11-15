@@ -3,6 +3,15 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  flex-grow: 1;
+}
+
+#app-container {
+  display: flex;
+}
+
+#sidebar {
+  width: 250px;
 }
 
 .logo {

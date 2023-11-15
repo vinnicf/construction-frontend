@@ -7,12 +7,15 @@ import LoginModal from './components/LoginModal';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from './components/Header';
 import Budget from './components/Budget/Budget';
+import Sidebar from './components/Sidebar';
+import SidebarPortal from './components/SidebarPortal';
 import CompositionPage from './components/Composicoes/CompositionPage';
 
 function App() {
   return (
     <AuthProvider>
       <Header />
+      <SidebarPortal />
       <Router basename="/app/">
         <Routes>
           <Route path="/login" element={<LoginModal />} />

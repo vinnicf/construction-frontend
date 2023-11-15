@@ -12,33 +12,29 @@ const Sidebar = () => {
     };
 
     return (
-        <div>
-            <button className="btn btn-primary" onClick={handleToggle}>
+        <>
+            <button className="btn btn-primary btn-close" onClick={handleToggle}>
                 {isCollapsed ? '☰' : '✕'} {/* Using Unicode characters for menu and close */}
             </button>
 
-            <CSSTransition in={!isCollapsed} timeout={300} classNames="sidebar" unmountOnExit>
-                <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
+            <div className={`sidebar ${isCollapsed ? 'collapsed' : 'expanded'}`}>
+                <button className="btn btn-primary btn-close" onClick={handleToggle}>
+                    {isCollapsed ? '☰' : '✕'} {/* Toggle icon */}
+                </button>
+
+                {!isCollapsed && (
                     <nav className="sidebar-nav">
-                        {/* Mockup content */}
+                        {/* Your sidebar content */}
                         <ul className="nav flex-column">
                             <li className="nav-item">
                                 <a className="nav-link active" href="#">Home</a>
                             </li>
-                            <li className="nav-item">
-                                <a className="nav-link" href="#">Features</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link" href="#">Pricing</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link" href="#">About</a>
-                            </li>
+                            {/* ... other nav items */}
                         </ul>
                     </nav>
-                </div>
-            </CSSTransition>
-        </div>
+                )}
+            </div>
+        </>
     );
 };
 

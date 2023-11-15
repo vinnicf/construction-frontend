@@ -1,6 +1,6 @@
 /* Transition classes from react-transition-group */
 .sidebar-enter {
-    max-width: 0;
+
     opacity: 0;
     transition: all 300ms ease-in;
 }
@@ -18,8 +18,16 @@
 }
 
 .sidebar-exit-active {
-    max-width: 0;
+
     opacity: 0;
+}
+
+.sidebar.collapsed {
+    width: 0;
+    padding: 0;
+    /* Adjust or remove padding when collapsed */
+    overflow: hidden;
+    /* Prevent content from spilling out */
 }
 
 /* Custom styling for the sidebar */
@@ -64,4 +72,13 @@
     max-width: 0;
     overflow-x: hidden;
     transition: all 300ms ease-out;
+}
+
+.btn-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 10;
+    color: white;
+    /* Or any color that contrasts with the sidebar background */
 }

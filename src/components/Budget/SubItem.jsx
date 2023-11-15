@@ -34,8 +34,8 @@ const SubItem = ({ subItem, onSubItemChange, BDI }) => {
     };
 
     const handleDelete = () => {
-        console.log("Deleting subItem with idd:", subItem.idd);
-        onSubItemChange(subItem, 'delete'); // assuming onSubItemChange prop is essentially handleItemChange
+        console.log("Deleting subItem with id:", subItem.id);
+        onSubItemChange(subItem, 'delete'); // onSubItemChange prop is essentially handleItemChange
         setIsEditing(false); // revert to display mode after deletion
     };
 
