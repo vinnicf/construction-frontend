@@ -18,7 +18,6 @@ import '../../styles/budget.css'
 import Decimal from 'decimal.js';
 
 
-
 const Budget = () => {
 
     const { user } = useContext(AuthContext);
@@ -319,9 +318,6 @@ const Budget = () => {
     };
 
 
-
-
-
     const handleOpenAddStageModal = () => {
         setIsAddStageModalOpen(true);
     };
@@ -415,8 +411,6 @@ const Budget = () => {
                     onAddStage={handleAddStage}
                 />
 
-
-
                 {/* Master Table */}
                 <table className="table table-bordered table-hover table-custom">
                     <thead className="table-light sticky-header tabela-header">
@@ -478,8 +472,6 @@ const Budget = () => {
                         }
 
                     </tbody>
-
-
 
                 </table>
 

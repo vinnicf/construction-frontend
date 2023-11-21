@@ -1,7 +1,5 @@
-// Sidebar.jsx
-
 import React, { useState } from 'react';
-import { CSSTransition } from 'react-transition-group';
+import { Link } from 'react-router-dom';
 import '../styles/sidebar.css'
 
 const Sidebar = () => {
@@ -27,7 +25,7 @@ const Sidebar = () => {
                         {/* Your sidebar content */}
                         <ul className="nav flex-column">
                             <li className="nav-item">
-                                <a className="nav-link active" href="#">Home</a>
+                            <Link to="/">Orçamentos</Link> {/* Link to MainScreen */}
                             </li>
                             {/* ... other nav items */}
                         </ul>
