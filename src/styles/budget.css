@@ -11,12 +11,12 @@
 .title {
     font-size: 1.5em;
     cursor: pointer;
-    border-bottom: 2px dashed transparent; // Add a transparent border to keep the layout consistent
-    transition: border-bottom 0.3s; // Smooth transition for hover effect
+    border-bottom: 2px dashed transparent; /* Add a transparent border to keep the layout consistent  */
+    transition: border-bottom 0.3s; /* Smooth transition for hover effect  */
 }
 
 .title:hover {
-    border-bottom: 2px dashed #000; // Show a dashed underline on hover
+    border-bottom: 2px dashed #000; 
 }
 
 .flex-container {
@@ -60,3 +60,17 @@
     margin-top: 40px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
+.orcamentorlogo {
+    display: flex; /* Aligns image and text horizontally */
+    align-items: center; /* Centers items vertically */
+    color: white; /* Text color */
+    font-size: 1.2rem; /* Adjust the size as needed */
+    font-weight: bold; /* Makes the font bold */
+    gap: 0.5rem; /* Space between logo and text */
+  }
+  
+  .orcamentorlogo img {
+    height: 1.5 rem; /* Adjust based on your preference */
+    width: auto; /* Maintains the aspect ratio of the image */
+  }

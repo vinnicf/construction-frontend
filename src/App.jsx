@@ -9,11 +9,17 @@ import Header from './components/Header';
 import Budget from './components/Budget/Budget';
 import SidebarPortal from './components/SidebarPortal';
 import MainScreen from './components/MainScreen/MainScreen';
+import { MantineProvider } from '@mantine/core';
+import '@mantine/core/styles.css';
+
 
 function App() {
   return (
+    <MantineProvider
+    theme={{ /* theme options here */ }}
+  >
     <AuthProvider>
-      <Header />
+      
       
       <Router basename="/app/">
       <SidebarPortal />
@@ -39,6 +45,7 @@ function App() {
         </Routes>
       </Router>
     </AuthProvider>
+    </MantineProvider>
   );
 }
 
