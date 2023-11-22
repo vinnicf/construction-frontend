@@ -1,33 +1,25 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { fetchAllOrcamentos } from '../../api/orcamentoapi';
 
 
 const MainScreen = () => {
 
-    const [budgets] = useState([
-        {
-            name: 'EMEI Santa Catarina',
-            dateCreated: '2023-01-01',
-            estado: 'São Paulo',
-            dataSinapi: '05/2023',
-            id: '1'
-        },
-        {
-            name: 'Pavilhão da Usina de Tratamento de Resíduos',
-            dateCreated: '2023-02-10',
-            estado: 'Santa Catarina',
-            dataSinapi: '06/2023',
-            id: '2'
-        },
-        {
-            name: 'Quadra Esportiva Escola CAIC',
-            dateCreated: '2023-03-15',
-            estado: 'Rio Grande do Sul',
-            dataSinapi: '07/2023',
-            id: '5'
-        },
-        // ... other budgets ...
-    ]);
+    const [budgets, setBudgets] = useState([]);
+
+    useEffect(() => {
+        const getOrcamentos = async () => {
+            try {
+                const data = await fetchAllOrcamentos();
+                setBudgets(data); // Update the state with the fetched data
+            } catch (error) {
+                console.error('Failed to fetch orcamentos:', error);
+                // Handle errors or show a message to the user
+            }
+        };
+
+        getOrcamentos();
+    }, []); // Empty dependency array to run only on mount
 
     return (
         <div className="container mt-3">
@@ -45,9 +37,9 @@ const MainScreen = () => {
                     {budgets.map((budget, index) => (
                         <tr key={index}>
                             <td><Link to={`/budget/${budget.id}`}>{budget.name}</Link></td>
-                            <td>{budget.dateCreated}</td>
-                            <td>{budget.estado}</td>
-                            <td>{budget.dataSinapi}</td>
+                            <td>{budget.created_at}</td>
+                            <td>{budget.state}</td>
+                            <td>{budget.desonerado}</td>
                         </tr>
                     ))}
                 </tbody>

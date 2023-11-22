@@ -4,6 +4,20 @@ import axios from 'axios';
 const BASE_URL = 'http://127.0.0.1:8000/budget'; // Adjust as necessary
 const token = localStorage.getItem('token').replace(/"/g, ''); // Retrieve the stored token
 
+export const fetchAllOrcamentos = async () => {
+    try {
+        const token = localStorage.getItem('token').replace(/"/g, ''); // Get the token and remove extra quotes
+        const response = await axios.get('http://127.0.0.1:8000/budget/orcamentos/', {
+            headers: {
+                'Authorization': `Token ${token}`
+            }
+        });
+        return response.data; // This will be an array of Orcamento objects
+    } catch (error) {
+        console.error('Error fetching Orcamentos:', error);
+        throw error;
+    }
+};
 
 
 export const fetchOrcamento = async (id) => {
