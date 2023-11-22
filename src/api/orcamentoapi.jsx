@@ -22,8 +22,8 @@ export const fetchOrcamento = async (id) => {
     }
 };
 
-export const createOrcamentoItem = async (itemData) => {
-    const transformedData = transformDataForApi(itemData); // Transform the data first
+export const createOrcamentoItem = async (itemData, budgetId) => {
+    const transformedData = transformDataForApi(itemData, budgetId); // Transform the data first
     console.log(transformedData)
     try {
         const response = await axios.post(`${BASE_URL}/orcamento_items/`, transformedData, {
@@ -110,7 +110,7 @@ export const transformSingleItemToAppFormat = (itemFromApi) => {
     };
 };
 
-const transformDataForApi = (item) => {
+const transformDataForApi = (item, budgetId) => {
     return {
         id: item.id,
         refid: item.refId,
@@ -122,7 +122,7 @@ const transformDataForApi = (item) => {
         unit_cost: item.unitCost,
         mo_cost: item.mo_cost,
         material_cost: item.material_cost,
-        orcamento: 5
+        orcamento: budgetId
         // Add other fields as needed
     };
 };

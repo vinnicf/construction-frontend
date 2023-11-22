@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import AuthContext from '../../AuthContext';
+import { useParams } from 'react-router-dom';
 
 import Stage from './Stage';
 import SubItem from './SubItem';
@@ -38,6 +39,11 @@ const Budget = () => {
         state: 'RS',
         name: ''
     });
+
+
+    const { budgetId } = useParams();
+
+    console.log('Budget id:', budgetId)
 
     const handleBDIChange = (newBDI) => {
         setAppData(prevAppData => {
@@ -99,7 +105,7 @@ const Budget = () => {
             };
 
             try {
-                const orcamentoData = await fetchOrcamento(5);
+                const orcamentoData = await fetchOrcamento(budgetId);
                 console.log('Fetched Orcamento Data:', orcamentoData);
                 if (orcamentoData) {
                     newAppData = transformApiDataToAppFormat(orcamentoData);
@@ -172,7 +178,7 @@ const Budget = () => {
             if (typeof item.refId !== 'string') {
                 console.log('Item with invalid refId:', item);
             }
-        });
+        }); 
 
         // Create a shallow copy for immutable sorting
         const itemsToSortCopy = [...itemsToSort];
@@ -276,7 +282,7 @@ const Budget = () => {
         try {
             // Make the API call
             if (action === 'add') {
-                const newItemFromApi = await createOrcamentoItem(itemWithoutId);
+                const newItemFromApi = await createOrcamentoItem(itemWithoutId, budgetId);
                 console.log("New item from API:", newItemFromApi);
 
                 // Replace the item with the one returned from the API
