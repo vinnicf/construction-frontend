@@ -36,6 +36,21 @@ export const fetchOrcamento = async (id) => {
     }
 };
 
+export const createOrcamento = async (formData) => {
+    try {
+        const token = localStorage.getItem('token').replace(/"/g, '');
+        const response = await axios.post('http://127.0.0.1:8000/budget/orcamentos/', formData, {
+            headers: {
+                'Authorization': `Token ${token}`
+            }
+        });
+        return response.data; // This will be the newly created Orcamento object
+    } catch (error) {
+        console.error('Error creating Orcamento:', error);
+        throw error;
+    }
+};
+
 export const createOrcamentoItem = async (itemData, budgetId) => {
     const transformedData = transformDataForApi(itemData, budgetId); // Transform the data first
     console.log(transformedData)

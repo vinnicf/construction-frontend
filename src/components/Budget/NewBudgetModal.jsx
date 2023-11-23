@@ -14,9 +14,9 @@ const states = [
 
 const NewBudgetModal = ({ isOpen, onClose, onSubmit }) => {
     const [formData, setFormData] = useState({
-        BDI: '0.1',
-        desonerado: 'nao_desonerado',
         name: 'Orçamento de Obra',
+        bdi: '0.1',
+        desonerado: 'nao_desonerado',
         state: 'SP'
     });
 
@@ -32,14 +32,18 @@ const NewBudgetModal = ({ isOpen, onClose, onSubmit }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onSubmit(formData); // This callback is provided by the parent component
+        const dataToSubmit = {
+            ...formData,
+            bdi: formData.bdi.toString(), // Ensure 'bdi' is a string
+            desonerado: formData.desonerado === 'desonerado' ? 'desonerado' : 'nao_desonerado'
+        };
+        onSubmit(dataToSubmit); // Send the correctly formatted data
         onClose(); // Close the modal after submission
     };
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} title="Criar Novo Orçamento">
             <div className="modal-body">
-                <div><p className="alert alert-danger">Esta ação removerá todos os itens do seu orçamento atual</p></div>
                 <form onSubmit={handleSubmit}>
 
                     {/* Name input */}

@@ -5,8 +5,8 @@ import { AuthProvider } from './AuthContext';
 import ProtectedRoute from './ProtectedRoute';
 import LoginModal from './components/LoginModal';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Header from './components/Header';
 import Budget from './components/Budget/Budget';
+import BudgetCreation from './components/Budget/BudgetCreation';
 import SidebarPortal from './components/SidebarPortal';
 import MainScreen from './components/MainScreen/MainScreen';
 import { MantineProvider } from '@mantine/core';
@@ -41,8 +41,15 @@ function App() {
               </ProtectedRoute>
             }
           />
-          {/* More routes can be added */}
-        </Routes>
+         <Route
+         path="criar-orcamento"
+         element={
+          <ProtectedRoute>
+                <BudgetCreation />
+              </ProtectedRoute>
+         }
+         />
+                 </Routes>
       </Router>
     </AuthProvider>
     </MantineProvider>

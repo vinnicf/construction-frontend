@@ -17,7 +17,7 @@ import {
   } from '@tabler/icons-react';
 
   const data = [
-    { link: '', label: 'Criar Orçamento', icon: IconSquareRoundedPlusFilled },
+    { link: '/criar-orcamento', label: 'Criar Orçamento', icon: IconSquareRoundedPlusFilled },
     { link: '/', label: 'Meus Orçamentos', icon: IconReceipt2 },
     { link: '', label: 'Composições', icon: IconDatabaseImport },
 
