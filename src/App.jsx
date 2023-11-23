@@ -20,7 +20,6 @@ function App() {
   >
     <AuthProvider>
       
-      
       <Router basename="/app/">
       <SidebarPortal />
         <Routes>

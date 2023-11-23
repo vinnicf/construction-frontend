@@ -2,11 +2,19 @@ import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 
 const BASE_URL = 'http://127.0.0.1:8000/budget'; // Adjust as necessary
-const token = localStorage.getItem('token').replace(/"/g, ''); // Retrieve the stored token
+
+const getUserToken = () => {
+    const userString = localStorage.getItem('user');
+    if (userString) {
+        const user = JSON.parse(userString);
+        return user.token;
+    }
+    return null;
+};
 
 export const fetchAllOrcamentos = async () => {
     try {
-        const token = localStorage.getItem('token').replace(/"/g, ''); // Get the token and remove extra quotes
+        const token = getUserToken(); // Get the token and remove extra quotes
         const response = await axios.get('http://127.0.0.1:8000/budget/orcamentos/', {
             headers: {
                 'Authorization': `Token ${token}`
@@ -22,7 +30,7 @@ export const fetchAllOrcamentos = async () => {
 
 export const fetchOrcamento = async (id) => {
     try {
-        const token = localStorage.getItem('token').replace(/"/g, ''); // Get the token and remove extra quotes
+        const token = getUserToken();
         const response = await axios.get(`http://127.0.0.1:8000/budget/orcamentos/${id}/`, {
             headers: {
                 'Authorization': `Token ${token}`
@@ -38,7 +46,7 @@ export const fetchOrcamento = async (id) => {
 
 export const createOrcamento = async (formData) => {
     try {
-        const token = localStorage.getItem('token').replace(/"/g, '');
+        const token = getUserToken(); 
         const response = await axios.post('http://127.0.0.1:8000/budget/orcamentos/', formData, {
             headers: {
                 'Authorization': `Token ${token}`
@@ -54,6 +62,7 @@ export const createOrcamento = async (formData) => {
 export const createOrcamentoItem = async (itemData, budgetId) => {
     const transformedData = transformDataForApi(itemData, budgetId); // Transform the data first
     console.log(transformedData)
+    const token = getUserToken();
     try {
         const response = await axios.post(`${BASE_URL}/orcamento_items/`, transformedData, {
             headers: {
@@ -71,6 +80,7 @@ export const createOrcamentoItem = async (itemData, budgetId) => {
 // Update an existing OrcamentoItem
 export const updateOrcamentoItem = async (itemId, itemData) => {
     const transformedData = transformDataForApi(itemData);
+    const token = getUserToken();
     try {
         const response = await axios.patch(`${BASE_URL}/orcamento_items/${itemId}/`, transformedData, {
             headers: {
@@ -86,6 +96,7 @@ export const updateOrcamentoItem = async (itemId, itemData) => {
 
 // Delete an OrcamentoItem
 export const deleteOrcamentoItem = async (itemId) => {
+    const token = getUserToken();
     try {
         await axios.delete(`${BASE_URL}/orcamento_items/${itemId}/`, {
             headers: {

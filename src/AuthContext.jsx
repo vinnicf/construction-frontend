@@ -11,6 +11,7 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const checkAuth = () => {
             const userData = authService.getUser();
+            console.log("Initial User Data:", userData); // Log initial user data
             setIsAuth(!!userData); // If userData is not null, the user is authenticated
             setUser(userData); // Store user data in state
         };
@@ -23,6 +24,7 @@ export const AuthProvider = ({ children }) => {
         if (userData) {
             setIsAuth(true);
             setUser(userData);  // Save user data after login
+            console.log("User logged in:", userData); // Log on successful login
         }
     };
 
