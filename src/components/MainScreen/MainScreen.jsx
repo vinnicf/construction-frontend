@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { fetchAllOrcamentos } from '../../api/orcamentoapi';
+import { fetchAllOrcamentos, deleteOrcamento } from '../../api/orcamentoapi';
+import InfoBox from './InfoBox';
 
 
 const MainScreen = () => {
@@ -21,9 +22,41 @@ const MainScreen = () => {
         getOrcamentos();
     }, []); // Empty dependency array to run only on mount
 
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+        const year = date.getFullYear();
+    
+        return `${day}-${month}-${year}`;
+    };
+
+    const handleDelete = async (budgetId) => {
+        // Prompt the user to confirm the deletion
+        const isConfirmed = window.confirm("Tem certeza que deseja deletar este orçamento?");
+    
+        // If the user clicked 'OK', proceed with the deletion
+        if (isConfirmed) {
+            try {
+                await deleteOrcamento(budgetId);
+                setBudgets(budgets.filter(budget => budget.id !== budgetId));
+                // You may add a success message or some state update here if needed
+            } catch (error) {
+                // Handle the error, maybe show an alert or a message to the user
+                console.error('Error during deletion:', error);
+                // You may add an error message or some state update here if needed
+            }
+        }
+        // If the user clicked 'Cancel', do nothing
+    };
+
+
     return (
+      
+        
         <div className="container mt-3">
-            <h2 className="mb-4">Orçamentos</h2>
+              <InfoBox />
+            <h2 className="mb-4">Seus Orçamentos</h2>
             <table className="table">
                 <thead>
                     <tr>
@@ -31,15 +64,24 @@ const MainScreen = () => {
                         <th>Criado em</th>
                         <th>Estado</th>
                         <th>Data Sinapi</th>
+                        <th>Deletar</th>
                     </tr>
                 </thead>
                 <tbody>
                     {budgets.map((budget, index) => (
                         <tr key={index}>
                             <td><Link to={`/budget/${budget.id}`}>{budget.name}</Link></td>
-                            <td>{budget.created_at}</td>
+                            <td>{formatDate(budget.created_at)}</td>
                             <td>{budget.state}</td>
-                            <td>{budget.desonerado}</td>
+                            <td>{budget.desonerado === 'desonerado' ? 'Desonerado' : 'Não Desonerado'}</td>
+                            <td>
+                <button 
+                    className="btn btn-danger" 
+                    onClick={() => handleDelete(budget.id)}
+                >
+                    X
+                </button>
+            </td>
                         </tr>
                     ))}
                 </tbody>

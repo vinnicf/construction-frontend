@@ -6,8 +6,7 @@ const BDIChangeModal = ({ initialBDI, onBDIChange, isOpen, onClose }) => {
     const [newBDI, setNewBDI] = useState(initialBDI * 100); // Convert to percent
 
     const handleSubmit = () => {
-        onBDIChange(newBDI / 100); // Convert back to decimal
-        onDesoneradoChange(desonerado); // Pass the updated 'desonerado' state
+        onBDIChange(newBDI / 100); // Convert back to decima
         onClose(); // Close the modal using the passed-in onClose function
     };
 

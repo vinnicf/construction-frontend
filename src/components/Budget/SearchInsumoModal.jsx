@@ -40,10 +40,16 @@ const SearchInsumoModal = ({ isOpen, onClose, onAddInsumo, stageRefId, state, de
         try {
             const fetchedData = await fetchInsumoByCodigo(insumo.codigo, state, desonerado);
 
-            onAddInsumo(fetchedData, stageRefId);
-            console.log(fetchedData);
-            setSearchQuery("");
-            setSearchResults([]);
+            if (fetchedData) {
+                onAddInsumo(fetchedData, stageRefId);
+                setSearchQuery("");
+                setSearchResults([]);
+            } else {
+                // Handle the case where fetchedData is null due to an error
+                console.error("Failed to fetch insumo or insumo not found");
+                alert("Não foi encontrado Custo para este insumo. Tente utilizar outro insumo");
+            }
+
         } catch (error) {
             console.error("Error fetching insumo:", error);
         }

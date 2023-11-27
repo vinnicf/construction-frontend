@@ -44,6 +44,20 @@ export const fetchOrcamento = async (id) => {
     }
 };
 
+export const deleteOrcamento = async (id) => {
+    try {
+        const token = getUserToken();
+        await axios.delete(`http://127.0.0.1:8000/budget/orcamentos/${id}/`, {
+            headers: {
+                'Authorization': `Token ${token}`
+            }
+        });
+    } catch (error) {
+        console.error('Error deleting Orcamento:', error);
+        throw error;
+    }
+};
+
 export const createOrcamento = async (formData) => {
     try {
         const token = getUserToken(); 
@@ -108,7 +122,6 @@ export const deleteOrcamentoItem = async (itemId) => {
         throw error;
     }
 };
-
 
 
 export const transformApiDataToAppFormat = (apiData) => {

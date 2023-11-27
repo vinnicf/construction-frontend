@@ -25,10 +25,10 @@ const BudgetCreation = () => {
     };
 
     return (
-        <NewBudgetModal 
-            isOpen={isModalOpen} 
-            onClose={handleModalClose} 
-            onSubmit={handleModalSubmit} 
+        <NewBudgetModal
+            isOpen={isModalOpen}
+            onClose={handleModalClose}
+            onSubmit={handleModalSubmit}
         />
     );
 };

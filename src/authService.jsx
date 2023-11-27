@@ -10,7 +10,9 @@ export const login = async (username, password) => {
         localStorage.setItem('user', JSON.stringify({
             token: response.data.token,
             user_id: response.data.user_id,
-            username: response.data.username
+            username: response.data.username,
+            firstName: response.data.first_name,
+            lastName: response.data.last_name
         }));
     }
     return response.data;
@@ -26,7 +28,7 @@ export const getUser = () => {
 };
 
 export const logout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem('user');
 };
 
 export const getToken = () => {

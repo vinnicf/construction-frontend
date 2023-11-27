@@ -16,41 +16,44 @@ import '@mantine/core/styles.css';
 function App() {
   return (
     <MantineProvider
-    theme={{ /* theme options here */ }}
-  >
-    <AuthProvider>
-      
-      <Router basename="/app/">
-      <SidebarPortal />
-        <Routes>
-          <Route path="/login" element={<LoginModal />} />
-          <Route
-            path="/budget/:budgetId"
-            element={
-              <ProtectedRoute>
-                <Budget />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/" // The new route path
-            element={
-              <ProtectedRoute>
-                <MainScreen />
-              </ProtectedRoute>
-            }
-          />
-         <Route
-         path="criar-orcamento"
-         element={
-          <ProtectedRoute>
-                <BudgetCreation />
-              </ProtectedRoute>
-         }
-         />
-                 </Routes>
-      </Router>
-    </AuthProvider>
+      theme={{
+        primaryColor: 'cyan',
+        /* theme options here */
+}}
+    >
+      <AuthProvider>
+
+        <Router basename="/app/">
+          <SidebarPortal />
+          <Routes>
+            <Route path="/login" element={<LoginModal />} />
+            <Route
+              path="/budget/:budgetId"
+              element={
+                <ProtectedRoute>
+                  <Budget />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/" // The new route path
+              element={
+                <ProtectedRoute>
+                  <MainScreen />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="criar-orcamento"
+              element={
+                <ProtectedRoute>
+                  <BudgetCreation />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </Router>
+      </AuthProvider>
     </MantineProvider>
   );
 }

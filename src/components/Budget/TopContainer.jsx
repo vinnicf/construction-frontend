@@ -63,7 +63,6 @@ function TopContainer(props) {
                     <div className="menu-btn-container mb-3">
                         <button id="excel-btn" className="btn mb-2 mr-2 btn-outline-success" onClick={() => exportToExcel(appData.items, appData.BDI, appData.name, appData.desonerado)}><span className="btn-icon"><img src={SpreadsheetIcon} alt="" /></span> Exportar para Excel</button>
                         <button id="bdi-btn" className="btn btn-outline-warning" onClick={() => setBDIModalOpen(true)}><span className="btn-icon"><img src={EditIcon} alt="" /></span> Editar BDI</button>
-                        <button id="clean-btn" className="btn btn-outline-danger" onClick={handleOpenNewBudgetModal} ><span className="btn-icon"><img src={TrashIcon} alt="" /></span>Limpar Orçamento</button>
                     </div>
                 </div>
 

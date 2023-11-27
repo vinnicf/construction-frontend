@@ -66,6 +66,7 @@
     color: white; /* Text color */
     font-size: 1.2rem; /* Adjust the size as needed */
     font-weight: bold; /* Makes the font bold */
+    font-family: Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
     gap: 0.5rem; /* Space between logo and text */
   }
   

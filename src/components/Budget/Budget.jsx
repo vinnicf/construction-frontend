@@ -178,7 +178,7 @@ const Budget = () => {
             if (typeof item.refId !== 'string') {
                 console.log('Item with invalid refId:', item);
             }
-        }); 
+        });
 
         // Create a shallow copy for immutable sorting
         const itemsToSortCopy = [...itemsToSort];
@@ -408,7 +408,6 @@ const Budget = () => {
                     setBDIModalOpen={setBDIModalOpen}
                     isBDIModalOpen={isBDIModalOpen}
                     handleBDIChange={handleBDIChange}
-                    handleDesoneradoChange={handleDesoneradoChange}
                 />
 
                 <StageAddModal
