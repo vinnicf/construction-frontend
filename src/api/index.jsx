@@ -2,7 +2,7 @@ import axios from 'axios';
 
 
 
-const API_URL = "https://orcamentor.com/api";
+const API_URL = "http://127.0.0.1:8000/api";
 
 export const fetchCompositions = async (params) => {
     try {
@@ -57,9 +57,9 @@ export const fetchInsumos = async (params) => {
 }
 
 
-export const fetchCompositionByCodigo = async (codigo, state = 'RS', desonerado = 'nao_desonerado') => {
+export const fetchCompositionByCodigo = async (codigo, state = 'RS', desonerado = 'nao_desonerado', datasinapi = '202309') => {
     try {
-        const endpoint = `${API_URL}/composition/${codigo}/${state}/${desonerado}/`; // Note the new endpoint
+        const endpoint = `${API_URL}/composition/${codigo}/${state}/${desonerado}/${datasinapi}`; // Note the new endpoint
         const response = await axios.get(endpoint);
 
         return {
@@ -74,10 +74,10 @@ export const fetchCompositionByCodigo = async (codigo, state = 'RS', desonerado 
 
 
 
-export const fetchInsumoByCodigo = async (codigo, state = 'RS', desonerado = 'nao_desonerado') => {
+export const fetchInsumoByCodigo = async (codigo, state = 'RS', desonerado = 'nao_desonerado', datasinapi = '202309') => {
     try {
         // Change 'composition' to 'insumo' in the URL
-        const endpoint = `${API_URL}/insumo/${codigo}/${state}/${desonerado}/`;
+        const endpoint = `${API_URL}/insumo/${codigo}/${state}/${desonerado}/${datasinapi}`;
         const response = await axios.get(endpoint);
 
         return {

@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 
-const BASE_URL = 'http://127.0.0.1:8000/budget'; // Adjust as necessary
+const BASE_URL = 'http://127.0.0.1:8000/budget'; 
 
 const getUserToken = () => {
     const userString = localStorage.getItem('user');
@@ -15,7 +15,7 @@ const getUserToken = () => {
 export const fetchAllOrcamentos = async () => {
     try {
         const token = getUserToken(); // Get the token and remove extra quotes
-        const response = await axios.get('http://127.0.0.1:8000/budget/orcamentos/', {
+        const response = await axios.get(`${BASE_URL}/orcamentos/`, {
             headers: {
                 'Authorization': `Token ${token}`
             }
@@ -31,7 +31,7 @@ export const fetchAllOrcamentos = async () => {
 export const fetchOrcamento = async (id) => {
     try {
         const token = getUserToken();
-        const response = await axios.get(`http://127.0.0.1:8000/budget/orcamentos/${id}/`, {
+        const response = await axios.get(`${BASE_URL}/orcamentos/${id}/`, {
             headers: {
                 'Authorization': `Token ${token}`
             }
@@ -47,7 +47,7 @@ export const fetchOrcamento = async (id) => {
 export const deleteOrcamento = async (id) => {
     try {
         const token = getUserToken();
-        await axios.delete(`http://127.0.0.1:8000/budget/orcamentos/${id}/`, {
+        await axios.delete(`${BASE_URL}/orcamentos/${id}/`, {
             headers: {
                 'Authorization': `Token ${token}`
             }
@@ -61,7 +61,7 @@ export const deleteOrcamento = async (id) => {
 export const createOrcamento = async (formData) => {
     try {
         const token = getUserToken(); 
-        const response = await axios.post('http://127.0.0.1:8000/budget/orcamentos/', formData, {
+        const response = await axios.post(`${BASE_URL}/orcamentos/`, formData, {
             headers: {
                 'Authorization': `Token ${token}`
             }

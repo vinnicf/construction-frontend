@@ -3,7 +3,6 @@ import BDIChangeModal from './BDIChangeModal';
 import '../../styles/topcontainer.css'
 import SpreadsheetIcon from '../../assets/spreadsheet.svg'
 import EditIcon from '../../assets/edit.svg'
-import TrashIcon from '../../assets/trash.svg'
 import Carrinho from '../../assets/carrinho.svg'
 import Parafusos from '../../assets/parafusos.svg'
 import Etapas from '../../assets/etapas.svg'
@@ -12,6 +11,12 @@ const desoneradoMapping = {
     'desonerado': 'Desonerado',
     'nao_desonerado': 'Não Desonerado'
 };
+
+function formatDatasinapi(datasinapi) {
+    const year = datasinapi.substring(0, 4);
+    const month = datasinapi.substring(4, 6);
+    return `${month}/${year}`;
+}
 
 function TopContainer(props) {
     const {
@@ -71,7 +76,7 @@ function TopContainer(props) {
                         <div className="flex-container">
                             <div className="flex-row">
                                 <div className="flex-cell bg-light" style={{ width: '50%' }}>Banco de Dados</div>
-                                <div className="flex-cell"><b>SINAPI 09/2023 - {appData.state}</b></div>
+                                <div className="flex-cell"><b>{formatDatasinapi(appData.datasinapi)} - {appData.state}</b></div>
                             </div>
                             <div className="flex-row">
                                 <div className="flex-cell bg-light" style={{ width: '50%' }}>BDI</div>

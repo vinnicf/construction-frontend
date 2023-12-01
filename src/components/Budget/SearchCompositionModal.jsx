@@ -4,7 +4,7 @@ import Modal from './Modal';
 import '../../styles/searchcompositionmodal.css'
 import AddButton from '../../assets/add-button.svg'
 
-const SearchCompositionModal = ({ isOpen, onClose, onAddComposition, stageRefId, state, desonerado }) => {
+const SearchCompositionModal = ({ isOpen, onClose, onAddComposition, stageRefId, state, desonerado, datasinapi }) => {
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResults, setSearchResults] = useState([]);
     const [hasSearched, setHasSearched] = useState(false);
@@ -36,7 +36,7 @@ const SearchCompositionModal = ({ isOpen, onClose, onAddComposition, stageRefId,
 
     const handleAddFromSearch = async (composition) => {
         try {
-            const fetchedData = await fetchCompositionByCodigo(composition.codigo, state, desonerado);
+            const fetchedData = await fetchCompositionByCodigo(composition.codigo, state, desonerado, datasinapi);
             onAddComposition(fetchedData, stageRefId);
             console.log(fetchedData);
             setSearchQuery("");

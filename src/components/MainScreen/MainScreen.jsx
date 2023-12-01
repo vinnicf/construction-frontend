@@ -27,14 +27,14 @@ const MainScreen = () => {
         const day = String(date.getDate()).padStart(2, '0');
         const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
         const year = date.getFullYear();
-    
+
         return `${day}-${month}-${year}`;
     };
 
     const handleDelete = async (budgetId) => {
         // Prompt the user to confirm the deletion
         const isConfirmed = window.confirm("Tem certeza que deseja deletar este orçamento?");
-    
+
         // If the user clicked 'OK', proceed with the deletion
         if (isConfirmed) {
             try {
@@ -50,12 +50,18 @@ const MainScreen = () => {
         // If the user clicked 'Cancel', do nothing
     };
 
+    function formatDatasinapi(datasinapi) {
+        const year = datasinapi.substring(0, 4);
+        const month = datasinapi.substring(4, 6);
+        return `${month}/${year}`;
+    }
+
 
     return (
-      
-        
+
+
         <div className="container mt-3">
-              <InfoBox />
+            <InfoBox />
             <h2 className="mb-4">Seus Orçamentos</h2>
             <table className="table">
                 <thead>
@@ -64,6 +70,7 @@ const MainScreen = () => {
                         <th>Criado em</th>
                         <th>Estado</th>
                         <th>Data Sinapi</th>
+                        <th>Encargos Sociais</th>
                         <th>Deletar</th>
                     </tr>
                 </thead>
@@ -73,20 +80,22 @@ const MainScreen = () => {
                             <td><Link to={`/budget/${budget.id}`}>{budget.name}</Link></td>
                             <td>{formatDate(budget.created_at)}</td>
                             <td>{budget.state}</td>
+                            <td>{budget.datasinapi ? formatDatasinapi(budget.datasinapi) : 'N/A'}</td>
                             <td>{budget.desonerado === 'desonerado' ? 'Desonerado' : 'Não Desonerado'}</td>
                             <td>
-                <button 
-                    className="btn btn-danger" 
-                    onClick={() => handleDelete(budget.id)}
-                >
-                    X
-                </button>
-            </td>
+                                <button
+                                    className="btn btn-danger"
+                                    onClick={() => handleDelete(budget.id)}
+                                >
+                                    X
+                                </button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-        </div>
+
+            <footer><br /><br /><br /><br /><br /></footer> </div>
     );
 };
 

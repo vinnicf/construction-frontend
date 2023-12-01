@@ -6,7 +6,7 @@ import AddButton from '../../assets/add-button.svg'
 
 
 
-const SearchInsumoModal = ({ isOpen, onClose, onAddInsumo, stageRefId, state, desonerado }) => {
+const SearchInsumoModal = ({ isOpen, onClose, onAddInsumo, stageRefId, state, desonerado, datasinapi }) => {
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResults, setSearchResults] = useState([]);
     const [hasSearched, setHasSearched] = useState(false);
@@ -38,7 +38,7 @@ const SearchInsumoModal = ({ isOpen, onClose, onAddInsumo, stageRefId, state, de
 
     const handleAddFromSearch = async (insumo) => {
         try {
-            const fetchedData = await fetchInsumoByCodigo(insumo.codigo, state, desonerado);
+            const fetchedData = await fetchInsumoByCodigo(insumo.codigo, state, desonerado, datasinapi);
 
             if (fetchedData) {
                 onAddInsumo(fetchedData, stageRefId);

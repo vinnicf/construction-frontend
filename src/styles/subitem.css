@@ -1,0 +1,18 @@
+.auto-height-textarea {
+    min-height: 56px; /* This is the initial height of the text area */
+    height: auto;
+    overflow-y: hidden;
+  }
+
+  .icon-btn {
+    padding: 4px; /* Adjust the padding as needed */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .icon-btn i, .icon-btn img {
+    font-size: 16px; /* This is for font icons */
+    max-width: 25px; /* This is for image icons */
+    max-height: 25px; /* This is for image icons */
+  }

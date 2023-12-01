@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import '../../styles/subitem.css'
+import TrashIcon from '../../assets/trash.svg'
 
 
 const SubItem = ({ subItem, onSubItemChange, BDI }) => {
@@ -69,7 +71,7 @@ const SubItem = ({ subItem, onSubItemChange, BDI }) => {
             )}
 
             {isEditing ? (
-                <td><input className="form-control" value={name} onChange={(e) => setDescription(e.target.value)} /></td>
+                <td><input className="form-control auto-height-textarea" value={name} onChange={(e) => setDescription(e.target.value)} /></td>
             ) : (
                 <td onClick={() => setIsEditing(true)}>{name}</td>
             )}
@@ -83,7 +85,7 @@ const SubItem = ({ subItem, onSubItemChange, BDI }) => {
             )}
 
             <td>{isEditing ?
-                <button className="btn btn-primary" onClick={handleUpdate}>Atualizar</button> :
+                <button className="btn btn-primary" onClick={handleUpdate}>✓</button> :
                 parseFloat(unitCost).toLocaleString(`pt-BR`, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
             }
             </td>
@@ -91,7 +93,7 @@ const SubItem = ({ subItem, onSubItemChange, BDI }) => {
 
             <td> {/* Cost with BDI column */}
                 {isEditing ?
-                    <button className="btn btn-danger" onClick={handleDelete}>Excluir</button> :
+                    <button className="btn btn-danger icon-btn" onClick={handleDelete}><img src={TrashIcon} alt="" /></button> :
                     parseFloat(costWithBDI).toLocaleString(`pt-BR`, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
                 }
             </td>

@@ -6,14 +6,11 @@ import classes from '../styles/NavbarSimpleColored.module.css'
 import OrcamentorLogo from '../../src/assets/orcamentor-white.svg'
 import {
   IconSquareRoundedPlusFilled,
-  IconFingerprint,
-  IconKey,
-  IconSettings,
-  Icon2fa,
   IconDatabaseImport,
   IconReceipt2,
   IconSwitchHorizontal,
   IconLogout,
+  IconUserFilled,
 } from '@tabler/icons-react';
 
 const data = [
@@ -27,6 +24,8 @@ const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false); // State to manage whether the sidebar is collapsed
   const [active, setActive] = useState('Meus Orçamentos');
   const { logout } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
+  
 
   const handleToggle = () => {
     setIsCollapsed(!isCollapsed); // Toggle the isCollapsed state
@@ -63,8 +62,8 @@ const Sidebar = () => {
 
       <div className={classes.footer}>
         <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
-          <IconSwitchHorizontal className={classes.linkIcon} stroke={1.5} />
-          <span>Mudar Conta</span>
+          <IconUserFilled className={classes.linkIcon} stroke={1.5} />
+          <span>{user.username}</span>
         </a>
 
         <a href="#" className={classes.link} onClick={handleLogout}>

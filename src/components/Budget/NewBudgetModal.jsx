@@ -12,12 +12,20 @@ const states = [
     'SE', 'SP', 'TO'
 ];
 
+// Month options
+const monthOptions = [
+    { display: '09/2023', value: '202309' },
+    { display: '10/2023', value: '202310' }
+];
+
+
 const NewBudgetModal = ({ isOpen, onClose, onSubmit }) => {
     const [formData, setFormData] = useState({
         name: 'Orçamento de Obra',
         bdi: '0.1',
         desonerado: 'nao_desonerado',
-        state: 'SP'
+        state: 'SP',
+        datasinapi: '202310'
     });
 
     const handleChange = (e) => {
@@ -73,6 +81,22 @@ const NewBudgetModal = ({ isOpen, onClose, onSubmit }) => {
                             >
                                 {states.map((state, index) => (
                                     <option key={index} value={state}>{state}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        {/* Month Dropdown */}
+                        <div className="mb-3">
+                            <label htmlFor="month" className="form-label">Mês</label>
+                            <select
+                                className="form-select"
+                                id="month"
+                                name="month"
+                                value={formData.datasinapi}
+                                onChange={handleChange}
+                            >
+                                {monthOptions.map((option, index) => (
+                                    <option key={index} value={option.value}>{option.display}</option>
                                 ))}
                             </select>
                         </div>

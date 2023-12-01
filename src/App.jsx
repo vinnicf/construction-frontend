@@ -21,33 +21,21 @@ function App() {
         /* theme options here */
 }}
     >
-      <AuthProvider>
-
+     <AuthProvider>
         <Router basename="/app/">
-          <SidebarPortal />
           <Routes>
             <Route path="/login" element={<LoginModal />} />
             <Route
-              path="/budget/:budgetId"
+              path="*"
               element={
                 <ProtectedRoute>
-                  <Budget />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/" // The new route path
-              element={
-                <ProtectedRoute>
-                  <MainScreen />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="criar-orcamento"
-              element={
-                <ProtectedRoute>
-                  <BudgetCreation />
+                  <SidebarPortal />
+                  <Routes>
+                    <Route path="/budget/:budgetId" element={<Budget />} />
+                    <Route path="/" element={<MainScreen />} />
+                    <Route path="criar-orcamento" element={<BudgetCreation />} />
+                    {/* ... other routes */}
+                  </Routes>
                 </ProtectedRoute>
               }
             />

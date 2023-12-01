@@ -51,9 +51,7 @@ const Budget = () => {
         });
     };
 
-    const handleDesoneradoChange = () => {
-        console.log('Dummy');
-    };
+
 
     const handleNewBudgetFormSubmit = (data) => {
         setAppData(prevData => ({
@@ -375,7 +373,6 @@ const Budget = () => {
 
     return (
         <div id="main-container">
-            <div>Olá {user.username}</div>
             <div className="container mt-5">
                 {
                     isEditingTitle ? (
@@ -489,6 +486,7 @@ const Budget = () => {
                     stageRefId={currentStageRefId}
                     state={appData.state}
                     desonerado={appData.desonerado}
+                    datasinapi={appData.datasinapi}
                 />
 
                 <SearchInsumoModal
@@ -498,6 +496,7 @@ const Budget = () => {
                     stageRefId={currentStageRefId}
                     state={appData.state}
                     desonerado={appData.desonerado}
+                    datasinapi={appData.datasinapi}
                 />
                 <NewBudgetModal
                     isOpen={isNewBudgetModalOpen}

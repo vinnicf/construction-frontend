@@ -7,7 +7,7 @@ const InfoBox = () => {
           <strong>Estamos em desenvolvimento:</strong> Este aplicativo ainda está em fase de desenvolvimento ativo. Agradecemos sua paciência e compreensão durante este período.
         </p>
         <p className="card-text">
-          <em>Seu feedback é muito importante!</em> Se tiver sugestões ou encontrar algum problema, por favor, nos informe pelo e-mail: <a href="mailto:seuemail@example.com">seuemail@example.com</a>.
+          <em>Seu feedback é muito importante!</em> Se tiver sugestões ou encontrar algum problema, por favor, nos informe pelo e-mail: <a href="mailto:orcamentorapp@gmail.com">orcamentorapp@gmail.com</a>.
         </p>
         <p className="card-text">
           <strong>Funcionalidades em desenvolvimento:</strong>
