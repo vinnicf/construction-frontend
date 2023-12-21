@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 
-const BASE_URL = 'http://127.0.0.1:8000/budget'; 
+const BASE_URL = 'https://orcamentor.com/budget'; 
 
 const getUserToken = () => {
     const userString = localStorage.getItem('user');

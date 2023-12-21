@@ -76,7 +76,7 @@ function TopContainer(props) {
                         <div className="flex-container">
                             <div className="flex-row">
                                 <div className="flex-cell bg-light" style={{ width: '50%' }}>Banco de Dados</div>
-                                <div className="flex-cell"><b>{formatDatasinapi(appData.datasinapi)} - {appData.state}</b></div>
+                                <div className="flex-cell"><b>{appData.datasinapi ? formatDatasinapi(appData.datasinapi) : 'N/A'} - {appData.state}</b></div>
                             </div>
                             <div className="flex-row">
                                 <div className="flex-cell bg-light" style={{ width: '50%' }}>BDI</div>

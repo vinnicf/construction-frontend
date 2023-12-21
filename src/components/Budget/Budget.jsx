@@ -57,7 +57,7 @@ const Budget = () => {
         setAppData(prevData => ({
             ...prevData,
             items: [],
-            BDI: data.BDI,
+            BDI: data.bdi,
             desonerado: data.desonerado,
             state: data.state,
             name: data.name

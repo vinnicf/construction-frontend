@@ -1,7 +1,7 @@
 // authService.js
 import axios from 'axios';
 
-const API_URL = 'http://127.0.0.1:8000/usuario/api';
+const API_URL = 'https://orcamentor.com/usuario/api';
 
 export const login = async (username, password) => {
     const response = await axios.post(`${API_URL}/login/`, { username, password });

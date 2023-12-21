@@ -1,8 +1,6 @@
 import axios from 'axios';
 
-
-
-const API_URL = "http://127.0.0.1:8000/api";
+const API_URL = "https://orcamentor.com/api";
 
 export const fetchCompositions = async (params) => {
     try {
@@ -56,7 +54,6 @@ export const fetchInsumos = async (params) => {
     }
 }
 
-
 export const fetchCompositionByCodigo = async (codigo, state = 'RS', desonerado = 'nao_desonerado', datasinapi = '202309') => {
     try {
         const endpoint = `${API_URL}/composition/${codigo}/${state}/${desonerado}/${datasinapi}`; // Note the new endpoint
@@ -92,7 +89,6 @@ export const fetchInsumoByCodigo = async (codigo, state = 'RS', desonerado = 'na
         return null;
     }
 };
-
 
 
 export const exportToExcel = async (items, BDI, name, desonerado) => {

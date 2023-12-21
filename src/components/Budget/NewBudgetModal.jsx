@@ -31,7 +31,7 @@ const NewBudgetModal = ({ isOpen, onClose, onSubmit }) => {
     const handleChange = (e) => {
         const { name, value } = e.target;
 
-        let adjustedValue = name === 'BDI' ? parseFloat(value) / 100 : value;
+        let adjustedValue = name === 'bdi' ? parseFloat(value) / 100 : value;
         setFormData(prevFormData => ({
             ...prevFormData,
             [name]: adjustedValue
@@ -90,8 +90,8 @@ const NewBudgetModal = ({ isOpen, onClose, onSubmit }) => {
                             <label htmlFor="month" className="form-label">Mês</label>
                             <select
                                 className="form-select"
-                                id="month"
-                                name="month"
+                                id="datasinapi"
+                                name="datasinapi"
                                 value={formData.datasinapi}
                                 onChange={handleChange}
                             >
@@ -107,9 +107,9 @@ const NewBudgetModal = ({ isOpen, onClose, onSubmit }) => {
                             <input
                                 className="form-control"
                                 type="number"
-                                id="BDI"
-                                name="BDI"
-                                value={formData.BDI * 100}  // Display as percentage
+                                id="bdi"
+                                name="bdi"
+                                value={formData.bdi * 100}  // Display as percentage
                                 onChange={handleChange}
                                 placeholder="Digite o BDI (em %)"
                             />
